@@ -1,0 +1,140 @@
+.perfil-container {
+  display: flex;
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 0 20px;
+  font-family: 'Helvetica', sans-serif;
+  color: #333;
+}
+
+.perfil-sidebar {
+  width: 250px;
+  margin-right: 40px;
+}
+
+.perfil-sidebar h3 {
+  font-size: 16px;
+  margin-bottom: 10px;
+  color: #000;
+  font-weight: 600;
+}
+
+.perfil-sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 30px;
+}
+
+.perfil-sidebar li {
+  margin-bottom: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #666;
+}
+
+.perfil-sidebar li.activo {
+  color: #e74c3c;
+  font-weight: bold;
+}
+
+.perfil-content {
+  flex: 1;
+  background-color: #fff;
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.04);
+}
+
+.perfil-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.perfil-header h2 {
+  color: #e74c3c;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.perfil-user {
+  text-align: right;
+  font-size: 14px;
+}
+
+.nombre-usuario {
+  font-weight: bold;
+  color: #e74c3c;
+}
+
+.cerrar-sesion {
+  background: none;
+  border: none;
+  color: #333;
+  cursor: pointer;
+  font-size: 13px;
+  margin-top: 5px;
+  text-decoration: underline;
+}
+
+.perfil-form {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.form-row {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.form-row input {
+  flex: 1;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 14px;
+  background-color: #f9f9f9;
+}
+
+.form-row input:disabled {
+  background-color: #f0f0f0;
+}
+
+h4 {
+  font-size: 16px;
+  font-weight: 500;
+  color: #444;
+  margin: 10px 0 5px;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 20px;
+}
+
+.cancelar-btn {
+  background-color: transparent;
+  color: #333;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.guardar-btn {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.guardar-btn:hover {
+  background-color: #c0392b;
+}

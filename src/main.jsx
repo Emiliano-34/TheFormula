@@ -1,24 +1,22 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
 import App from './App';
-import reportWebVitals from './reportWebVitals';
-
+import './index.css';
 import { BrowserRouter } from 'react-router-dom';
 import { AuthProvider } from './context/authContext';
 import { CartProvider } from './context/CartContext';
+import { FavoritesProvider } from './context/FavoritesContext'; // <-- NUEVO
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
+ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <BrowserRouter>
       <AuthProvider>
         <CartProvider>
-          <App />
+          <FavoritesProvider> {/* <-- NUEVO */}
+            <App />
+          </FavoritesProvider>
         </CartProvider>
       </AuthProvider>
     </BrowserRouter>
   </React.StrictMode>
 );
-
-reportWebVitals();

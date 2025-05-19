@@ -1,11 +1,17 @@
-import sqlite3 from 'sqlite3';
-import { open } from 'sqlite';
+// Server/db.js
+import sql from 'mssql';
 
-sqlite3.verbose();
+const config = {
+  user: 'Ozuna',                 // ← asegurarte que es del tipo: usuario@servidor
+  password: 'Admin-1234',
+  server: 'theformula-sql.database.windows.net', // ✅ sin http:// y sin /
+  database: 'THE_FORMULA',
+  options: {
+    encrypt: true,
+    trustServerCertificate: false
+  }
+};
 
-const db = await open({
-  filename: './theformula.sqlite', // o el nombre que hayas usado
-  driver: sqlite3.Database
-});
+const poolPromise = sql.connect(config);
 
-export default db;
+export { sql, poolPromise };

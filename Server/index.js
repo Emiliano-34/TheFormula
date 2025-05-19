@@ -1,40 +1,31 @@
-// Server/index.js
 import express from 'express';
 import cors from 'cors';
+import cartRoutes from './routes/cartRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import productRoutes from './routes/productRoutes.js';
-// importa más rutas si las necesitas
-import db from './db.js';
-
-const initDB = async () => {
-  const database = await db;
-  await database.exec(`
-    CREATE TABLE IF NOT EXISTS usuarios (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      nombre TEXT NOT NULL,
-      apellido TEXT,
-      correo TEXT NOT NULL UNIQUE,
-      telefono TEXT,
-      contraseña TEXT NOT NULL,
-      rol TEXT NOT NULL DEFAULT 'user'
-    );
-  `);
-};
-
-initDB();
 
 const app = express();
-app.use(cors());
+const PORT = process.env.PORT || 3001;
+
+// Configuración de CORS para permitir solicitudes desde el frontend
+app.use(cors({
+  origin: 'http://localhost:5173',
+  credentials: true
+}));
+
 app.use(express.json());
 
+// Rutas principales
+app.use('/api/cart', cartRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/products', productRoutes);
 
-app.get('/api/health', (req, res) => {
-  res.json({ status: 'OK', time: new Date().toISOString() });
+// Ruta de prueba
+app.get('/', (req, res) => {
+  res.send('API funcionando correctamente');
 });
 
-const PORT = 3001;
+// Inicio del servidor
 app.listen(PORT, () => {
-  console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
+  console.log(`Servidor backend escuchando en http://localhost:${PORT}`);
 });

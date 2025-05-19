@@ -16,6 +16,9 @@ import HomePage from './pages/HomePage';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Cart from './pages/Cart';
+import Favorites from './pages/Favorites';
+import Perfil from './pages/Perfil';
+import ResultadosBusqueda from './pages/ResultadosBusqueda';
 
 import AdminLayout from './components/AdminLayout';
 import './App.css';
@@ -28,6 +31,9 @@ function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/cart" element={<Cart />} />
+      <Route path="/favoritos" element={<Favorites />} />
+      <Route path="/perfil" element={<Perfil />} />
+      <Route path="/buscar" element={<ResultadosBusqueda />} />
 
       {/* Rutas protegidas del admin */}
       <Route

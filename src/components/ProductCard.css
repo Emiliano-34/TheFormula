@@ -97,6 +97,17 @@
     transition: background 0.3s;
   }
   
+  .favorite-icon {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+
   .add-to-cart-btn:hover {
     background: #1a252f;
   }

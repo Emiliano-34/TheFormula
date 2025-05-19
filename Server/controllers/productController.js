@@ -1,76 +1,64 @@
-// server/controllers/productController.js
-import pool from '../db.js';
+import { sql, poolPromise } from '../db.js';
 
 export const getFeaturedProducts = async (req, res) => {
   try {
-    const result = await pool.query(`
+    const pool = await poolPromise;
+
+    const result = await pool.request().query(`
       SELECT 
-        p.id,
-        p.nombre_producto AS name,
-        p.precio AS price,
-        p.costo AS originalPrice,
-        p.imagen_producto AS image,
-        p.calificacion AS rating,
-        COALESCE(r.review_count, 0) AS reviews,
-        p.vendidos AS sold
-      FROM productos p
+        P.ID_PRODUCTO AS id,
+        P.NOMBRE_PRODUCTO AS name,
+        P.PRECIO AS price,
+        P.COSTO AS originalPrice,
+        P.IMAGEN_URL AS image,
+        P.CALIFICACION AS rating,
+        ISNULL(R.review_count, 0) AS reviews,
+        P.VENDIDOS AS sold
+      FROM PRODUCTOS P
       LEFT JOIN (
-        SELECT producto, COUNT(*) as review_count
-        FROM resenas
-        GROUP BY producto
-      ) r ON p.id = r.producto
-      WHERE p.existencias > 0
-      ORDER BY p.vendidos DESC
-      LIMIT 8
+        SELECT ID_PRODUCTO, COUNT(*) AS review_count
+        FROM RESENAS
+        GROUP BY ID_PRODUCTO
+      ) R ON P.ID_PRODUCTO = R.ID_PRODUCTO
+      WHERE P.EXISTENCIAS > 0
+      ORDER BY P.VENDIDOS DESC
+      OFFSET 0 ROWS FETCH NEXT 8 ROWS ONLY
     `);
 
-    // Convert bytea image to base64 if exists
-    const products = result.rows.map(product => ({
-      ...product,
-      image: product.image ? product.image.toString('base64') : null
-    }));
+    res.json({ success: true, products: result.recordset });
 
-    res.json({
-      success: true,
-      products
-    });
   } catch (err) {
-    console.error('Error fetching products:', err);
-    res.status(500).json({
-      success: false,
-      error: 'Error al obtener los productos'
-    });
+    console.error('Error fetching featured products:', err);
+    res.status(500).json({ success: false, error: 'Error al obtener los productos destacados' });
   }
 };
 
 export const getFlashDealProducts = async (req, res) => {
-  const targetDate = '2025-04-25'; // Use your test date
-  
+  const targetDate = '2025-04-25'; // Puedes cambiar esta fecha por req.query.fecha si se desea
+
   try {
-    console.log(`Fetching flash deals for date: ${targetDate}`);
-    
-    // Corrected query with proper parentheses
-    const result = await pool.query(`
-      SELECT 
-        p.id,
-        p.nombre_producto AS name,
-        p.precio AS price,
-        p.costo AS original_price,
-        p.calificacion AS rating,
-        hv.cant_ventas AS sold_today,
-        ROUND((p.precio - p.costo) / p.precio * 100) AS discount_percent
-      FROM productos p
-      JOIN historia_ventas hv ON p.id = hv.producto
-      WHERE hv.fecha = $1
-      AND p.existencias > 0
-      ORDER BY hv.cant_ventas DESC
-      LIMIT 4
-    `, [targetDate]);
+    const pool = await poolPromise;
 
-    console.log(`Found ${result.rowCount} flash deals`);
+    const result = await pool.request()
+      .input('fecha', sql.Date, targetDate)
+      .query(`
+        SELECT 
+          P.ID_PRODUCTO AS id,
+          P.NOMBRE_PRODUCTO AS name,
+          P.PRECIO AS price,
+          P.COSTO AS original_price,
+          P.CALIFICACION AS rating,
+          HV.CANT_VENTAS AS sold_today,
+          ROUND((P.PRECIO - P.COSTO) / P.PRECIO * 100, 0) AS discount_percent
+        FROM PRODUCTOS P
+        JOIN HISTORIA_VENTAS HV ON P.ID_PRODUCTO = HV.ID_PRODUCTO
+        WHERE HV.FECHA = @fecha
+        AND P.EXISTENCIAS > 0
+        ORDER BY HV.CANT_VENTAS DESC
+        OFFSET 0 ROWS FETCH NEXT 4 ROWS ONLY
+      `);
 
-    // Process the results
-    const products = result.rows.map(product => ({
+    const products = result.recordset.map(product => ({
       ...product,
       deal_end: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
     }));
@@ -78,31 +66,30 @@ export const getFlashDealProducts = async (req, res) => {
     return res.json({ success: true, products });
 
   } catch (err) {
-    console.error('Detailed error:', {
-      message: err.message,
-      query: err.query, // The exact failed query
-      stack: err.stack
-    });
-    
+    console.error('Error fetching flash deals:', err);
     return res.status(500).json({
       success: false,
-      error: 'Database operation failed',
-      detail: process.env.NODE_ENV === 'development' ? err.message : undefined
+      error: 'Database operation failed'
     });
   }
 };
+
+
 export const getCategories = async (req, res) => {
   try {
-    const result = await pool.query(`
-      SELECT id, nombre_categoria AS name
-      FROM categorias
-      ORDER BY name
+    const pool = await poolPromise;
+
+    const result = await pool.request().query(`
+      SELECT ID_CATEGORIA AS id, NOMBRE_CATEGORIA AS name
+      FROM CATEGORIA
+      ORDER BY NOMBRE_CATEGORIA
     `);
 
     res.json({
       success: true,
-      categories: result.rows
+      categories: result.recordset
     });
+
   } catch (err) {
     console.error('Error fetching categories:', err);
     res.status(500).json({

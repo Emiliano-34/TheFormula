@@ -1,12 +1,17 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react-swc'
+// vite.config.js
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react-swc';
 
-// https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
   server: {
-    historyApiFallback: true,
-    port: 5173, // Force this port
-    strictPort: true // Don't try other ports
-  },
-})
+    port: 5173,
+    strictPort: true,
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3001',
+        changeOrigin: true
+      }
+    }
+  }
+});

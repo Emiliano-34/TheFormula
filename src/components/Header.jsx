@@ -4,17 +4,24 @@ import busqueda from '../assets/busqueda.png';
 import corazon from '../assets/corazon.png';
 import carrito from '../assets/carrito.png';
 import usuario from '../assets/usuario.png';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/authContext';
 
 function Header() {
   const { user, logout } = useAuth();
   const [showPanel, setShowPanel] = useState(false);
+  const [query, setQuery] = useState('');
   const panelRef = useRef();
+  const navigate = useNavigate();
 
   const togglePanel = () => setShowPanel(prev => !prev);
 
-  // Cierra el panel si se hace clic fuera
+  const handleSearch = () => {
+    if (query.trim()) {
+      navigate(`/buscar?q=${encodeURIComponent(query.trim())}`);
+    }
+  };
+
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (panelRef.current && !panelRef.current.contains(e.target)) {
@@ -27,7 +34,8 @@ function Header() {
 
   return (
     <header className="header">
-      <div className="logo">THE FORMULA</div>
+      <div className="logo" onClick={() => navigate('/')}>THE FORMULA</div>
+
       <nav>
         <Link to="/">Inicio</Link>
 
@@ -45,17 +53,37 @@ function Header() {
 
       <div className="icons">
         <div className="search-container">
-          <input type="text" placeholder="¿Qué estás buscando?" />
-          <img src={busqueda} alt="Buscar" className="search-icon" />
+          <input
+            type="text"
+            placeholder="¿Qué estás buscando?"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+          />
+          <img
+            src={busqueda}
+            alt="Buscar"
+            className="search-icon"
+            onClick={handleSearch}
+          />
         </div>
-        <button><img src={corazon} alt="Favoritos" /></button>
-        <button><img src={carrito} alt="Carrito" /></button>
+
+        <button onClick={() => navigate('/favoritos')}>
+          <img src={corazon} alt="Favoritos" />
+        </button>
+
+        <button onClick={() => navigate('/cart')}>
+          <img src={carrito} alt="Carrito" />
+        </button>
 
         <div className="user-panel-container" ref={panelRef}>
-          <button onClick={togglePanel}><img src={usuario} alt="Usuario" /></button>
+          <button onClick={togglePanel}>
+            <img src={usuario} alt="Usuario" />
+          </button>
           {showPanel && user && (
             <div className="user-panel">
               <p>Hola, {user.nombre}</p>
+              <button onClick={() => navigate('/perfil')}>Ver perfil</button>
               <button className="logout-btn" onClick={logout}>Cerrar sesión</button>
             </div>
           )}

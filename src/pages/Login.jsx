@@ -14,7 +14,6 @@ const Login = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Check for registration success message
   useEffect(() => {
     if (location.state?.registrationSuccess) {
       setError(`¡Registro exitoso! Por favor inicia sesión con ${location.state.email}`);
@@ -38,18 +37,18 @@ const Login = () => {
       setIsLoading(false);
       return;
     }
-    
-    if (result.success) {
-      const storedUser = JSON.parse(localStorage.getItem('user'));
-    
-      if (storedUser?.rol === 'admin') {
-        navigate('/agregar-producto');
-      } else {
-        navigate('/');
-      }
+
+    const storedUser = JSON.parse(localStorage.getItem('user'));
+
+    if (storedUser?.rol === 'admin') {
+      navigate('/admin/agregar-producto');
+    } else {
+      navigate('/');
     }
+
     setIsLoading(false);
-};  
+  };  
+
   return (
     <>
       <div className="top-banner">

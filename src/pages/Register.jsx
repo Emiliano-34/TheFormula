@@ -39,7 +39,6 @@ function Register() {
       return;
     }
 
-    // Validación de teléfono mexicano (10 dígitos, empieza con 55, 56, 81 o 33)
     if (!/^(55|56|81|33)\d{8}$/.test(form.telefono)) {
       setError('Introduce un número mexicano válido de 10 dígitos (Ej. 5512345678)');
       setIsLoading(false);
@@ -51,6 +50,13 @@ function Register() {
     if (!result.success) {
       setError(result.error);
       setIsLoading(false);
+    } else {
+      navigate('/login', {
+        state: {
+          registrationSuccess: true,
+          email: form.correo
+        }
+      });
     }
   };
 

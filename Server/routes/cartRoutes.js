@@ -1,16 +1,24 @@
-// server/routes/cartRoutes.js
-const express = require('express');
+// Server/routes/cartRoutes.js
+import express from 'express';
+import {
+  getCart,
+  addToCart,
+  updateCartItem,
+  removeFromCart,
+  clearCart,
+  applyCoupon // opcional si implementas cupones
+} from '../controllers/cartController.js';
+import { verifyToken } from '../middleware/authMiddleware.js';
+
 const router = express.Router();
-const cartController = require('../controllers/cartController');
-const { verifyToken } = require('../middleware/authMiddleware');
 
 router.use(verifyToken);
 
-router.get('/', cartController.getCart);
-router.post('/', cartController.addToCart);
-router.put('/:itemId', cartController.updateCartItem);
-router.delete('/:itemId', cartController.removeFromCart);
-router.delete('/', cartController.clearCart);
-router.post('/apply-coupon', cartController.applyCoupon);
+router.get('/', getCart);
+router.post('/', addToCart);
+router.put('/:itemId', updateCartItem);
+router.delete('/:itemId', removeFromCart);
+router.delete('/', clearCart);
+router.post('/apply-coupon', applyCoupon); // si no lo has implementado, elimínalo
 
-module.exports = router;
+export default router;
