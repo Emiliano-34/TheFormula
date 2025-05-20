@@ -12,6 +12,7 @@ import PanelAdmin from './pages/PanelAdmin';
 import AdminRoute from './components/AdminRoute';
 import Productos from './components/Productos';
 
+import DetalleProducto from './pages/DetalleProducto';
 import HomePage from './pages/HomePage';
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -34,6 +35,8 @@ function App() {
       <Route path="/favoritos" element={<Favorites />} />
       <Route path="/perfil" element={<Perfil />} />
       <Route path="/buscar" element={<ResultadosBusqueda />} />
+        <Route path="/producto/:id" element={<DetalleProducto />} />
+
 
       {/* Rutas protegidas del admin */}
       <Route
@@ -53,6 +56,7 @@ function App() {
         <Route path="PasoMarca" element={<PasoMarca />} />
         <Route path="Imagen" element={<Imagen />} />
         <Route path="Final" element={<Final />} />
+
       </Route>
     </Routes>
   );

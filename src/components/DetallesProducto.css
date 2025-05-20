@@ -1,130 +1,94 @@
-.top-info {
-    display: flex;
-    justify-content: space-between;
-    font-size: 14px;
-    color: #777;
-    margin-bottom: 10px;
-  }
-  
-  .breadcrumb span {
-    color: #000;
-    font-weight: 500;
-  }
-  
-  .welcome .admin-name {
-    color: #d63d3d;
-    font-weight: bold;
-  }
-  
-  .titulo-formulario {
-    color: #d63d3d;
-    font-size: 1.2rem;
-    margin-bottom: 15px;
-  }
-  
-  .stepper {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 20px 0;
-  }
-  
-  .step {
-    width: 35px;
-    height: 35px;
-    border: 2px solid black;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    background-color: white;
-    color: black;
-  }
-  
-  .step.active {
-    background-color: #d63d3d;
-    color: white;
-    border-color: #d63d3d;
-  }
-  
-  .step.check {
-    background-color: #d63d3d;
-    border-color: #d63d3d;
-  }
-  
-  .step.check img {
-    width: 20px;
-    height: 20px;
-  }
-  
-  .line {
-    width: 30px;
-    height: 2px;
-    background-color: black;
-    margin: 0 5px;
-  }
-  
-  .form-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-  }
-  
-  .form-group {
-    flex: 1 1 45%;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .form-group label {
-    margin-bottom: 5px;
-    font-weight: bold;
-  }
-  
-  .form-group input,
-  .form-group select {
-    padding: 8px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-  }
-  
-  .form-button {
-    flex-basis: 100%;
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 20px;
-  }
-  
-  .btn {
-    background-color: #d63d3d;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  .step.completed {
-    background-color: white;
-    border: 2px solid #d63d3d;
-  }
-  
-  .step.completed img {
-    width: 20px;
-    height: 20px;
-  }
-  .form-card {
-    background-color: white;
-    padding: 20px;
-    border-radius: 5px;
-    box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
-    margin-top: 15px;
-  }
-  
-  .form-button {
-    flex-basis: 100%;
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 20px;
-  }
-  
+.detalle-producto {
+  display: flex;
+  align-items: flex-start;
+  gap: 40px;
+  padding: 40px 60px;
+  font-family: 'Helvetica Neue', sans-serif;
+  background-color: #f9f9f9;
+}
+
+.galeria {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.galeria img {
+  width: 70px;
+  height: 70px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  cursor: pointer;
+}
+
+.principal img {
+  width: 350px;
+  max-height: 350px;
+  object-fit: contain;
+  border-radius: 8px;
+  border: 1px solid #eee;
+  background: white;
+  padding: 10px;
+}
+
+.info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.info h1 {
+  font-size: 22px;
+  margin-bottom: 8px;
+  font-weight: bold;
+  line-height: 1.4;
+  color: #222;
+}
+
+.rating {
+  color: #f39c12;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.precio {
+  font-size: 24px;
+  font-weight: bold;
+  color: #e74c3c;
+  margin-bottom: 10px;
+}
+
+.estado {
+  font-size: 14px;
+  color: green;
+  margin-bottom: 20px;
+}
+
+.agregar-carrito {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 4px;
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.3s;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.agregar-carrito:hover {
+  background-color: #c0392b;
+}
+
+.beneficios {
+  font-size: 14px;
+  color: #444;
+  margin-top: 10px;
+}
+
+.beneficios p {
+  margin-bottom: 8px;
+}

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useFavorites } from '../context/FavoritesContext.jsx';
 import './ProductCard.css';
@@ -6,6 +7,7 @@ import './ProductCard.css';
 const ProductCard = ({ product, isDeal = false }) => {
   const { addToCart } = useCart();
   const { isFavorite, addToFavorites, removeFromFavorites } = useFavorites();
+  const navigate = useNavigate();
 
   if (!product || typeof product !== 'object') return null;
 
@@ -33,6 +35,10 @@ const ProductCard = ({ product, isDeal = false }) => {
     }
   };
 
+  const irADetalles = () => {
+    navigate(`/producto/${id}`);
+  };
+
   return (
     <div className="product-card">
       {isDeal && discountPercent !== null && (
@@ -43,7 +49,7 @@ const ProductCard = ({ product, isDeal = false }) => {
         {isFavorite(id) ? '❤️' : '🤍'}
       </button>
 
-      <div className="product-image-container">
+      <div className="product-image-container" onClick={irADetalles} style={{ cursor: 'pointer' }}>
         <img
           src={image.startsWith('data:') ? image : image}
           alt={name}

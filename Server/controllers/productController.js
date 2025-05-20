@@ -74,7 +74,6 @@ export const getFlashDealProducts = async (req, res) => {
   }
 };
 
-
 export const getCategories = async (req, res) => {
   try {
     const pool = await poolPromise;
@@ -96,5 +95,68 @@ export const getCategories = async (req, res) => {
       success: false,
       error: 'Error al obtener las categorías'
     });
+  }
+};
+
+export const getProductById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const pool = await poolPromise;
+
+    const result = await pool.request()
+      .input('id', sql.Int, id)
+      .query(`
+        SELECT 
+          P.ID_PRODUCTO AS id,
+          P.NOMBRE_PRODUCTO AS name,
+          P.PRECIO AS price,
+          P.DESCRIPCION AS description,
+          P.IMAGEN_URL AS image,
+          P.CALIFICACION AS rating,
+          P.ID_CATEGORIA AS categoriaId, -- 👈 IMPORTANTE
+          ISNULL(R.review_count, 0) AS reviews
+        FROM PRODUCTOS P
+        LEFT JOIN (
+          SELECT ID_PRODUCTO, COUNT(*) AS review_count
+          FROM RESENAS
+          GROUP BY ID_PRODUCTO
+        ) R ON P.ID_PRODUCTO = R.ID_PRODUCTO
+        WHERE P.ID_PRODUCTO = @id
+      `);
+
+    if (result.recordset.length === 0) {
+      return res.status(404).json({ success: false, message: 'Producto no encontrado' });
+    }
+
+    res.json({ success: true, product: result.recordset[0] });
+
+  } catch (err) {
+    console.error('Error al obtener producto:', err);
+    res.status(500).json({ success: false, message: 'Error del servidor' });
+  }
+};
+
+
+export const getProductosRelacionados = async (req, res) => {
+  try {
+    const { categoriaId } = req.params;
+    const pool = await poolPromise;
+
+    const result = await pool.request()
+      .input('categoriaId', sql.Int, categoriaId)
+      .query(`
+        SELECT TOP 4 
+          ID_PRODUCTO AS id,
+          NOMBRE_PRODUCTO AS name,
+          PRECIO AS price,
+          IMAGEN_URL AS image
+        FROM PRODUCTOS
+        WHERE ID_CATEGORIA = @categoriaId AND EXISTENCIAS > 0 AND ID_PRODUCTO != @id
+        ORDER BY NEWID()
+      `);
+
+    res.json({ success: true, products: result.recordset });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Error al obtener productos relacionados' });
   }
 };
