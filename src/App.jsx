@@ -19,9 +19,10 @@ import Register from './pages/Register';
 import Cart from './pages/Cart';
 import Favorites from './pages/Favorites';
 import Perfil from './pages/Perfil';
-import ResultadosBusqueda from './pages/ResultadosBusqueda';
 import TodosProductos from './pages/TodosProductos';
 import Buscar from './pages/Buscar';
+import DireccionEnvio from './pages/DireccionEnvio';
+import MetodosPago from './pages/MetodosPago';
 
 import AdminLayout from './components/AdminLayout';
 import './App.css';
@@ -39,7 +40,8 @@ function App() {
       <Route path="/producto/:id" element={<DetalleProducto />} />
       <Route path="/todos-productos" element={<TodosProductos />} />
       <Route path="/buscar" element={<Buscar />} />
-
+<Route path="/direccion-envio" element={<DireccionEnvio />} />
+<Route path="/metodos-pago" element={<MetodosPago />} />
       {/* Rutas protegidas del admin */}
       <Route
         path="/admin"

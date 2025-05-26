@@ -1,140 +1,99 @@
 .perfil-container {
   display: flex;
-  max-width: 1200px;
+  max-width: 1100px;
   margin: 40px auto;
-  padding: 0 20px;
-  font-family: 'Helvetica', sans-serif;
-  color: #333;
+  padding: 20px;
+  gap: 30px;
 }
 
 .perfil-sidebar {
-  width: 250px;
-  margin-right: 40px;
+  flex: 1;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 10px;
+  height: fit-content;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.05);
 }
 
 .perfil-sidebar h3 {
-  font-size: 16px;
-  margin-bottom: 10px;
-  color: #000;
+  margin-bottom: 20px;
+  font-size: 18px;
   font-weight: 600;
 }
 
 .perfil-sidebar ul {
   list-style: none;
   padding: 0;
-  margin-bottom: 30px;
 }
 
 .perfil-sidebar li {
-  margin-bottom: 10px;
+  margin-bottom: 15px;
   cursor: pointer;
-  font-size: 14px;
-  color: #666;
+  font-size: 15px;
+  color: #444;
+  transition: color 0.2s ease;
 }
 
-.perfil-sidebar li.activo {
-  color: #e74c3c;
+.perfil-sidebar li.activo,
+.perfil-sidebar li:hover {
+  color: #d63031;
   font-weight: bold;
 }
 
 .perfil-content {
-  flex: 1;
+  flex: 3;
+  padding: 30px;
   background-color: #fff;
-  padding: 40px;
-  border-radius: 10px;
-  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.04);
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
-.perfil-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 30px;
-}
-
-.perfil-header h2 {
-  color: #e74c3c;
-  font-size: 20px;
+.perfil-content h2 {
+  margin-bottom: 20px;
+  font-size: 22px;
   font-weight: 600;
-}
-
-.perfil-user {
-  text-align: right;
-  font-size: 14px;
-}
-
-.nombre-usuario {
-  font-weight: bold;
-  color: #e74c3c;
-}
-
-.cerrar-sesion {
-  background: none;
-  border: none;
-  color: #333;
-  cursor: pointer;
-  font-size: 13px;
-  margin-top: 5px;
-  text-decoration: underline;
 }
 
 .perfil-form {
   display: flex;
   flex-direction: column;
-  gap: 25px;
+  gap: 15px;
 }
 
-.form-row {
-  display: flex;
-  gap: 20px;
-  flex-wrap: wrap;
+.perfil-form input {
+  padding: 12px 14px;
+  font-size: 15px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  transition: border 0.2s ease;
+  width: 100%;
 }
 
-.form-row input {
-  flex: 1;
-  padding: 12px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  font-size: 14px;
-  background-color: #f9f9f9;
+.perfil-form input:focus {
+  outline: none;
+  border-color: #2980b9;
 }
 
-.form-row input:disabled {
-  background-color: #f0f0f0;
-}
-
-h4 {
+.perfil-form h4 {
+  margin-top: 25px;
   font-size: 16px;
   font-weight: 500;
-  color: #444;
-  margin: 10px 0 5px;
+  color: #555;
 }
 
-.form-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 20px;
-}
-
-.cancelar-btn {
-  background-color: transparent;
-  color: #333;
-  border: none;
-  cursor: pointer;
-  font-size: 14px;
-}
-
-.guardar-btn {
-  background-color: #e74c3c;
+.perfil-form button {
+  margin-top: 25px;
+  background-color: #2c3e50;
   color: white;
   border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
-  font-size: 14px;
-  cursor: pointer;
+  padding: 12px;
+  border-radius: 6px;
+  font-size: 15px;
   font-weight: 500;
+  cursor: pointer;
+  transition: background 0.3s ease;
 }
 
-.guardar-btn:hover {
-  background-color: #c0392b;
+.perfil-form button:hover {
+  background-color: #1a252f;
 }

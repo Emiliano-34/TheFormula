@@ -6,12 +6,13 @@ import './Register.css';
 function Register() {
   const [form, setForm] = useState({
     nombre: '',
-    apellidos: '',
+    apellido: '', // corregido (antes era "apellidos")
     correo: '',
     telefono: '',
     contrasena: '',
     confirmar: '',
   });
+
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { register } = useAuth();
@@ -19,7 +20,6 @@ function Register() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
     if (name === 'telefono') {
       const soloNumeros = value.replace(/\D/g, '');
       setForm(prev => ({ ...prev, [name]: soloNumeros }));
@@ -99,11 +99,11 @@ function Register() {
                 />
               </div>
               <div className="form-group">
-                <label>Apellidos</label>
+                <label>Apellido(s)</label>
                 <input
                   type="text"
-                  name="apellidos"
-                  value={form.apellidos}
+                  name="apellido"
+                  value={form.apellido}
                   onChange={handleChange}
                   required
                 />

@@ -1,32 +1,50 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import { useAuth } from '../context/authContext';
 import './Perfil.css';
 
 const Perfil = () => {
   const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     nombre: '',
     apellido: '',
     telefono: '',
-    actualPassword: '',
-    nuevaPassword: '',
+    nuevaContrasena: '',
     confirmarPassword: ''
   });
 
-  useEffect(() => {
-    const fetchUserData = async () => {
+useEffect(() => {
+  const fetchUserData = async () => {
+    if (!user || !user.id) {
+      //console.log('❌ user.id no está definido:', user);
+      return;
+    }
+
+    try {
+      //console.log('✅ Buscando datos del usuario con ID:', user.id);  // ← AQUI
       const res = await fetch(`http://localhost:3001/api/users/${user.id}`);
       const data = await res.json();
-      setFormData(prev => ({
-        ...prev,
-        nombre: data.NOMBRE,
-        apellido: data.APELLIDO,
-        telefono: data.TELEFONO
-      }));
-    };
-    fetchUserData();
-  }, [user.id]);
+      //console.log('📦 Datos del backend:', data); // ← AQUI
+
+      if (data.success && data.user) {
+        setFormData(prev => ({
+          ...prev,
+          nombre: data.user.nombre ?? '',
+          apellido: data.user.apellido ?? '',
+          telefono: data.user.telefono ?? '',
+        }));
+      }
+    } catch (err) {
+      //console.error('❌ Error al cargar datos del usuario:', err);
+    }
+  };
+
+  fetchUserData();
+}, [user]);
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -35,22 +53,29 @@ const Perfil = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (formData.nuevaPassword !== formData.confirmarPassword) {
-      alert("Las contraseñas no coinciden");
+
+    if (formData.nuevaContrasena && formData.nuevaContrasena !== formData.confirmarPassword) {
+      alert('Las contraseñas no coinciden');
       return;
     }
 
-    await fetch(`http://localhost:3001/api/users/${user.id}`, {
+    const res = await fetch(`http://localhost:3001/api/users/${user.id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         nombre: formData.nombre,
         apellido: formData.apellido,
-        telefono: formData.telefono
+        telefono: formData.telefono,
+        nuevaContrasena: formData.nuevaContrasena
       })
     });
 
-    alert('Cambios guardados');
+    const data = await res.json();
+    if (data.success) {
+      alert('Perfil actualizado correctamente');
+    } else {
+      alert('Error al guardar cambios');
+    }
   };
 
   return (
@@ -58,45 +83,66 @@ const Perfil = () => {
       <Header />
       <div className="perfil-container">
         <aside className="perfil-sidebar">
-          <h3>Gestionar Cuenta</h3>
+          <h3>Gestión de cuenta</h3>
           <ul>
             <li className="activo">Mi perfil</li>
-            <li>Dirección de envío</li>
-            <li>Métodos de pago</li>
+            <li onClick={() => navigate('/direccion-envio')}>Dirección de envío</li>
+            <li onClick={() => navigate('/metodos-pago')}>Métodos de pago</li>
             <li onClick={logout}>Cerrar sesión</li>
           </ul>
         </aside>
 
         <main className="perfil-content">
-          <div className="perfil-header">
-            <h2>Editar tu perfil</h2>
-            <div className="perfil-user">
-              Bienvenido! <span className="nombre-usuario">{user?.nombre} {user?.apellido}</span><br />
-              <button className="cerrar-sesion" onClick={logout}>Cerrar sesión</button>
-            </div>
-          </div>
-
+          <h2>Editar perfil</h2>
           <form className="perfil-form" onSubmit={handleSubmit}>
-            <div className="form-row">
-              <input name="nombre" placeholder="Nombre" value={formData.nombre} onChange={handleChange} />
-              <input name="apellido" placeholder="Apellido" value={formData.apellido} onChange={handleChange} />
-            </div>
-
-            <div className="form-row">
-              <input name="telefono" placeholder="Teléfono" value={formData.telefono} onChange={handleChange} />
-            </div>
+            <input
+              type="text"
+              name="nombre"
+              value={formData.nombre}
+              onChange={handleChange}
+              placeholder="Nombre"
+              required
+              autoComplete="off"
+            />
+            <input
+              type="text"
+              name="apellido"
+              value={formData.apellido}
+              onChange={handleChange}
+              placeholder="Apellido"
+              required
+              autoComplete="off"
+            />
+            <input
+              type="tel"
+              name="telefono"
+              value={formData.telefono}
+              onChange={handleChange}
+              placeholder="Teléfono"
+              required
+              maxLength={10}
+              autoComplete="off"
+            />
 
             <h4>Cambiar contraseña</h4>
-            <div className="form-row">
-              <input type="password" name="actualPassword" placeholder="Contraseña actual" onChange={handleChange} />
-              <input type="password" name="nuevaPassword" placeholder="Nueva contraseña" onChange={handleChange} />
-              <input type="password" name="confirmarPassword" placeholder="Confirmar nueva contraseña" onChange={handleChange} />
-            </div>
+            <input
+              type="password"
+              name="nuevaContrasena"
+              value={formData.nuevaContrasena}
+              onChange={handleChange}
+              placeholder="Nueva contraseña"
+              autoComplete="new-password"
+            />
+            <input
+              type="password"
+              name="confirmarPassword"
+              value={formData.confirmarPassword}
+              onChange={handleChange}
+              placeholder="Confirmar nueva contraseña"
+              autoComplete="new-password"
+            />
 
-            <div className="form-actions">
-              <button type="button" className="cancelar-btn">Cancelar</button>
-              <button type="submit" className="guardar-btn">Guardar cambios</button>
-            </div>
+            <button type="submit">Guardar cambios</button>
           </form>
         </main>
       </div>

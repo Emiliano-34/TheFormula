@@ -52,7 +52,7 @@ export const AuthProvider = ({ children }) => {
         },
         body: JSON.stringify({
           nombre: form.nombre,
-          apellido: form.apellido,
+          apellido: form.apellido, // ✅ nombre correcto
           correo: form.correo.trim().toLowerCase(),
           telefono: form.telefono,
           contrasena: form.contrasena
