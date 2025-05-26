@@ -177,3 +177,223 @@ export const crearAdmin = async (req, res) => {
     res.status(500).json({ error: 'Error del servidor al crear admin' });
   }
 };
+
+export const getDireccionByUserId = async (req, res) => {
+  const id = parseInt(req.params.id);
+  if (isNaN(id)) return res.status(400).json({ success: false, error: 'ID inválido' });
+
+  try {
+    const pool = await poolPromise;
+    const result = await pool.request()
+      .input('id_usuario', sql.Int, id)
+      .query(`
+        SELECT 
+          CALLE AS calle, 
+          NUM_EXT AS numero, 
+          MUNICIPIO AS ciudad, 
+          ID_ESTADO AS estado, 
+          CODIGO_POSTAL AS codigoPostal
+        FROM DIRECCIONES
+        WHERE ID_USUARIO = @id_usuario
+      `);
+
+    if (!result.recordset.length) {
+      return res.status(404).json({ success: false, direccion: null });
+    }
+
+    res.json({ success: true, direccion: result.recordset[0] });
+  } catch (err) {
+    console.error('❌ Error al obtener dirección:', err);
+    res.status(500).json({ success: false, error: 'Error del servidor' });
+  }
+};
+
+
+export const saveDireccion = async (req, res) => {
+  const idUsuario = parseInt(req.params.id);
+  const { calle, numero, ciudad, estado, codigoPostal } = req.body;
+
+  if (isNaN(idUsuario)) {
+    return res.status(400).json({ success: false, error: 'ID inválido' });
+  }
+
+  try {
+    const pool = await poolPromise;
+
+    // Verificar si ya existe una dirección
+    const check = await pool.request()
+      .input('id_usuario', sql.Int, idUsuario)
+      .query('SELECT COUNT(*) AS total FROM DIRECCIONES WHERE ID_USUARIO = @id_usuario');
+
+    const existe = check.recordset[0].total > 0;
+
+    if (existe) {
+      // Actualizar dirección
+      await pool.request()
+        .input('id_usuario', sql.Int, idUsuario)
+        .input('calle', sql.NVarChar, calle)
+        .input('numero', sql.NVarChar, numero)
+        .input('ciudad', sql.NVarChar, ciudad)
+        .input('estado', sql.Int, parseInt(estado))
+        .input('codigoPostal', sql.VarChar, codigoPostal)
+        .query(`
+          UPDATE DIRECCIONES
+          SET CALLE = @calle, NUM_EXT = @numero, MUNICIPIO = @ciudad, ID_ESTADO = @estado, CODIGO_POSTAL = @codigoPostal
+          WHERE ID_USUARIO = @id_usuario
+        `);
+    } else {
+      // Insertar nueva dirección
+      await pool.request()
+        .input('id_usuario', sql.Int, idUsuario)
+        .input('calle', sql.NVarChar, calle)
+        .input('numero', sql.NVarChar, numero)
+        .input('ciudad', sql.NVarChar, ciudad)
+        .input('estado', sql.Int, parseInt(estado))
+        .input('codigoPostal', sql.VarChar, codigoPostal)
+        .query(`
+          INSERT INTO DIRECCIONES (ID_USUARIO, CALLE, NUM_EXT, MUNICIPIO, ID_ESTADO, CODIGO_POSTAL)
+          VALUES (@id_usuario, @calle, @numero, @ciudad, @estado, @codigoPostal)
+        `);
+    }
+
+    res.json({ success: true, message: existe ? 'Dirección actualizada' : 'Dirección guardada correctamente' });
+
+  } catch (err) {
+    console.error('❌ Error guardando dirección:', err);
+    res.status(500).json({ success: false, error: 'Error del servidor al guardar dirección' });
+  }
+};
+
+export const updateDireccionByUserId = async (req, res) => {
+  const id = parseInt(req.params.id);
+  const { calle, numero, ciudad, estado, codigoPostal } = req.body;
+
+  if (isNaN(id)) {
+    return res.status(400).json({ success: false, error: 'ID inválido' });
+  }
+
+  try {
+    const pool = await poolPromise;
+
+    const existe = await pool.request()
+      .input('id_usuario', sql.Int, id)
+      .query('SELECT 1 FROM DIRECCIONES WHERE ID_USUARIO = @id_usuario');
+
+    if (existe.recordset.length) {
+      // Actualiza dirección existente
+      await pool.request()
+        .input('id_usuario', sql.Int, id)
+        .input('calle', sql.NVarChar, calle)
+        .input('numero', sql.VarChar, numero)
+        .input('ciudad', sql.NVarChar, ciudad)
+        .input('estado', sql.Int, estado)
+        .input('codigoPostal', sql.VarChar, codigoPostal)
+        .query(`
+          UPDATE DIRECCIONES
+          SET CALLE = @calle, NUM_EXT = @numero, MUNICIPIO = @ciudad,
+              ID_ESTADO = @estado, CODIGO_POSTAL = @codigoPostal
+          WHERE ID_USUARIO = @id_usuario
+        `);
+    } else {
+      // Inserta nueva dirección
+      await pool.request()
+        .input('id_usuario', sql.Int, id)
+        .input('calle', sql.NVarChar, calle)
+        .input('numero', sql.VarChar, numero)
+        .input('ciudad', sql.NVarChar, ciudad)
+        .input('estado', sql.Int, estado)
+        .input('codigoPostal', sql.VarChar, codigoPostal)
+        .query(`
+          INSERT INTO DIRECCIONES (ID_USUARIO, CALLE, NUM_EXT, MUNICIPIO, ID_ESTADO, CODIGO_POSTAL)
+          VALUES (@id_usuario, @calle, @numero, @ciudad, @estado, @codigoPostal)
+        `);
+    }
+
+    res.json({ success: true, message: 'Dirección guardada correctamente' });
+
+  } catch (err) {
+    console.error('❌ Error al guardar dirección:', err);
+    res.status(500).json({ success: false, error: 'Error del servidor' });
+  }
+};
+
+export const getMetodoPagoByUserId = async (req, res) => {
+  const id = parseInt(req.params.id);
+  try {
+    const pool = await poolPromise;
+    const result = await pool.request()
+      .input('id', sql.Int, id)
+      .query(`
+        SELECT MP.TITULAR, MP.NUMERO_ENMASCARADO AS numero, MP.VENCIMIENTO, TP.NOMBRE AS tipo
+        FROM METODOS_PAGO MP
+        JOIN TIPOS_METODO_PAGO TP ON MP.ID_TIPO = TP.ID_TIPO
+        WHERE MP.ID_USUARIO = @id
+      `);
+
+    if (!result.recordset.length) {
+      return res.status(404).json({ success: false, metodo: null });
+    }
+
+    res.json({ success: true, metodo: result.recordset[0] });
+  } catch (err) {
+    console.error('❌ Error al obtener método de pago:', err);
+    res.status(500).json({ success: false, error: 'Error del servidor' });
+  }
+};
+
+export const updateMetodoPagoByUserId = async (req, res) => {
+  const id = parseInt(req.params.id);
+  const { titular, numero, vencimiento, tipoId = 1 } = req.body;
+
+  try {
+    const pool = await poolPromise;
+
+    const numeroEnmascarado = numero.slice(-4).padStart(numero.length, '*');
+
+    const existing = await pool.request()
+      .input('id', sql.Int, id)
+      .query(`SELECT ID_METODO FROM METODOS_PAGO WHERE ID_USUARIO = @id`);
+
+    if (existing.recordset.length) {
+      await pool.request()
+        .input('titular', sql.NVarChar, titular)
+        .input('numero', sql.VarChar, numeroEnmascarado)
+        .input('vencimiento', sql.VarChar, vencimiento)
+        .input('id_usuario', sql.Int, id)
+        .input('id_tipo', sql.Int, tipoId)
+        .query(`
+          UPDATE METODOS_PAGO 
+          SET TITULAR = @titular, NUMERO_ENMASCARADO = @numero, VENCIMIENTO = @vencimiento, ID_TIPO = @id_tipo
+          WHERE ID_USUARIO = @id_usuario
+        `);
+    } else {
+      await pool.request()
+        .input('titular', sql.NVarChar, titular)
+        .input('numero', sql.VarChar, numeroEnmascarado)
+        .input('vencimiento', sql.VarChar, vencimiento)
+        .input('id_usuario', sql.Int, id)
+        .input('id_tipo', sql.Int, tipoId)
+        .query(`
+          INSERT INTO METODOS_PAGO (ID_USUARIO, ID_TIPO, TITULAR, NUMERO_ENMASCARADO, VENCIMIENTO)
+          VALUES (@id_usuario, @id_tipo, @titular, @numero, @vencimiento)
+        `);
+    }
+
+    res.json({ success: true, message: 'Método de pago guardado' });
+  } catch (err) {
+    console.error('❌ Error al guardar método de pago:', err);
+    res.status(500).json({ success: false, error: 'Error del servidor' });
+  }
+};
+
+
+export const getTiposMetodoPago = async (req, res) => {
+  try {
+    const pool = await poolPromise;
+    const result = await pool.query(`SELECT ID_TIPO AS id_tipo, NOMBRE AS nombre FROM TIPOS_METODO_PAGO`);
+    res.json({ success: true, tipos: result.recordset });
+  } catch (err) {
+    console.error('❌ Error al obtener tipos de método de pago:', err);
+    res.status(500).json({ success: false, error: 'Error al obtener tipos' });
+  }
+};

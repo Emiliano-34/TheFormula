@@ -83,16 +83,29 @@ export const AuthProvider = ({ children }) => {
     navigate('/login');
   };
 
-  useEffect(() => {
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      try {
-        setUser(JSON.parse(storedUser));
-      } catch (err) {
-        console.error('Error al parsear usuario almacenado:', err);
-      }
+useEffect(() => {
+  const storedUser = localStorage.getItem('user');
+  if (storedUser) {
+    try {
+      const parsed = JSON.parse(storedUser);
+
+      // Normalizar claves (si vienen en mayúsculas del backend)
+      const normalizedUser = {
+        id: parsed.id,
+        nombre: parsed.nombre ?? parsed.NOMBRE ?? '',
+        apellido: parsed.apellido ?? parsed.APELLIDO ?? '',
+        correo: parsed.correo ?? parsed.CORREO ?? '',
+        telefono: parsed.telefono ?? parsed.TELEFONO ?? '',
+        rol: parsed.rol ?? parsed.ROL ?? (parsed.admin ? 'admin' : 'user')
+      };
+
+      setUser(normalizedUser);
+    } catch (err) {
+      console.error('Error al parsear usuario almacenado:', err);
     }
-  }, []);
+  }
+}, []);
+
 
   return (
     <AuthContext.Provider value={{ user, login, register, logout, isAuthenticated: !!user }}>
