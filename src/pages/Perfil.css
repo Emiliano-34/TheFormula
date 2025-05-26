@@ -97,3 +97,18 @@
 .perfil-form button:hover {
   background-color: #1a252f;
 }
+
+
+.grid-metodos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.metodo-card {
+  padding: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background: #f9f9f9;
+}

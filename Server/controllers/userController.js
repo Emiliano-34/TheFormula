@@ -324,17 +324,22 @@ export const getMetodoPagoByUserId = async (req, res) => {
     const result = await pool.request()
       .input('id', sql.Int, id)
       .query(`
-        SELECT MP.TITULAR, MP.NUMERO_ENMASCARADO AS numero, MP.VENCIMIENTO, TP.NOMBRE AS tipo
+        SELECT 
+          MP.ID_METODO,
+          MP.TITULAR, 
+          MP.NUMERO_ENMASCARADO, 
+          MP.VENCIMIENTO, 
+          TP.NOMBRE AS tipo
         FROM METODOS_PAGO MP
         JOIN TIPOS_METODO_PAGO TP ON MP.ID_TIPO = TP.ID_TIPO
         WHERE MP.ID_USUARIO = @id
       `);
 
     if (!result.recordset.length) {
-      return res.status(404).json({ success: false, metodo: null });
+      return res.status(404).json({ success: false, metodos: [] });
     }
 
-    res.json({ success: true, metodo: result.recordset[0] });
+    res.json({ success: true, metodos: result.recordset });
   } catch (err) {
     console.error('❌ Error al obtener método de pago:', err);
     res.status(500).json({ success: false, error: 'Error del servidor' });
@@ -350,36 +355,19 @@ export const updateMetodoPagoByUserId = async (req, res) => {
 
     const numeroEnmascarado = numero.slice(-4).padStart(numero.length, '*');
 
-    const existing = await pool.request()
-      .input('id', sql.Int, id)
-      .query(`SELECT ID_METODO FROM METODOS_PAGO WHERE ID_USUARIO = @id`);
+    // Siempre INSERTAR, no actualizar
+    await pool.request()
+      .input('titular', sql.NVarChar, titular)
+      .input('numero', sql.VarChar, numeroEnmascarado)
+      .input('vencimiento', sql.VarChar, vencimiento)
+      .input('id_usuario', sql.Int, id)
+      .input('id_tipo', sql.Int, tipoId)
+      .query(`
+        INSERT INTO METODOS_PAGO (ID_USUARIO, ID_TIPO, TITULAR, NUMERO_ENMASCARADO, VENCIMIENTO)
+        VALUES (@id_usuario, @id_tipo, @titular, @numero, @vencimiento)
+      `);
 
-    if (existing.recordset.length) {
-      await pool.request()
-        .input('titular', sql.NVarChar, titular)
-        .input('numero', sql.VarChar, numeroEnmascarado)
-        .input('vencimiento', sql.VarChar, vencimiento)
-        .input('id_usuario', sql.Int, id)
-        .input('id_tipo', sql.Int, tipoId)
-        .query(`
-          UPDATE METODOS_PAGO 
-          SET TITULAR = @titular, NUMERO_ENMASCARADO = @numero, VENCIMIENTO = @vencimiento, ID_TIPO = @id_tipo
-          WHERE ID_USUARIO = @id_usuario
-        `);
-    } else {
-      await pool.request()
-        .input('titular', sql.NVarChar, titular)
-        .input('numero', sql.VarChar, numeroEnmascarado)
-        .input('vencimiento', sql.VarChar, vencimiento)
-        .input('id_usuario', sql.Int, id)
-        .input('id_tipo', sql.Int, tipoId)
-        .query(`
-          INSERT INTO METODOS_PAGO (ID_USUARIO, ID_TIPO, TITULAR, NUMERO_ENMASCARADO, VENCIMIENTO)
-          VALUES (@id_usuario, @id_tipo, @titular, @numero, @vencimiento)
-        `);
-    }
-
-    res.json({ success: true, message: 'Método de pago guardado' });
+    res.json({ success: true, message: 'Método de pago guardado correctamente' });
   } catch (err) {
     console.error('❌ Error al guardar método de pago:', err);
     res.status(500).json({ success: false, error: 'Error del servidor' });
