@@ -190,3 +190,45 @@ export const getOfertasActivas = async (req, res) => {
     res.status(500).json({ success: false, message: 'Error al obtener ofertas activas' });
   }
 };
+
+// Añade esta función en productController.js
+export const searchProducts = async (req, res) => {
+  const { q } = req.query;
+
+  if (!q || q.trim() === '') {
+    return res.json({ success: true, products: [] });
+  }
+
+  try {
+    const pool = await poolPromise;
+    const result = await pool.request()
+      .input('q', sql.VarChar, `%${q}%`)
+      .query(`
+        SELECT 
+          P.ID_PRODUCTO AS id,
+          P.NOMBRE_PRODUCTO AS name,
+          ROUND(
+            CASE 
+              WHEN O.DESCUENTO IS NOT NULL THEN P.PRECIO * (1 - O.DESCUENTO / 100.0)
+              ELSE P.PRECIO
+            END, 2
+          ) AS price,
+          P.PRECIO AS originalPrice,
+          P.IMAGEN_URL AS image,
+          P.CALIFICACION AS rating,
+          ISNULL(O.DESCUENTO, 0) AS discountPercent
+        FROM PRODUCTOS P
+        LEFT JOIN OFERTAS O 
+          ON O.ID_PRODUCTO = P.ID_PRODUCTO 
+          AND O.FECHA_INICIO <= CAST(GETDATE() AS DATE)
+          AND O.FECHA_FIN >= CAST(GETDATE() AS DATE)
+        WHERE P.NOMBRE_PRODUCTO LIKE @q
+          AND P.EXISTENCIAS > 0
+      `);
+
+    res.json({ success: true, products: result.recordset });
+  } catch (err) {
+    console.error('Error en búsqueda:', err);
+    res.status(500).json({ success: false, message: 'Error al buscar productos' });
+  }
+};

@@ -21,6 +21,7 @@ import Favorites from './pages/Favorites';
 import Perfil from './pages/Perfil';
 import ResultadosBusqueda from './pages/ResultadosBusqueda';
 import TodosProductos from './pages/TodosProductos';
+import Buscar from './pages/Buscar';
 
 import AdminLayout from './components/AdminLayout';
 import './App.css';
@@ -35,9 +36,9 @@ function App() {
       <Route path="/cart" element={<Cart />} />
       <Route path="/favoritos" element={<Favorites />} />
       <Route path="/perfil" element={<Perfil />} />
-      <Route path="/buscar" element={<ResultadosBusqueda />} />
       <Route path="/producto/:id" element={<DetalleProducto />} />
       <Route path="/todos-productos" element={<TodosProductos />} />
+      <Route path="/buscar" element={<Buscar />} />
 
       {/* Rutas protegidas del admin */}
       <Route

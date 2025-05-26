@@ -17,8 +17,10 @@ function Header() {
   const togglePanel = () => setShowPanel(prev => !prev);
 
   const handleSearch = () => {
-    if (query.trim()) {
-      navigate(`/buscar?q=${encodeURIComponent(query.trim())}`);
+    const trimmedQuery = query.trim();
+    if (trimmedQuery.length > 0) {
+      navigate(`/buscar?q=${encodeURIComponent(trimmedQuery)}`);
+      setQuery('');
     }
   };
 
@@ -38,17 +40,13 @@ function Header() {
 
       <nav>
         <Link to="/">Inicio</Link>
-
         {!user && (
           <>
             <Link to="/login">Iniciar sesión</Link>
             <Link to="/register">Regístrate</Link>
           </>
         )}
-
-        {user?.rol === 'admin' && (
-          <Link to="/admin">Panel de admin</Link>
-        )}
+        {user?.rol === 'admin' && <Link to="/admin">Panel de admin</Link>}
       </nav>
 
       <div className="icons">
@@ -60,12 +58,9 @@ function Header() {
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
           />
-          <img
-            src={busqueda}
-            alt="Buscar"
-            className="search-icon"
-            onClick={handleSearch}
-          />
+          <button onClick={handleSearch} className="search-btn">
+            <img src={busqueda} alt="Buscar" className="search-icon" />
+          </button>
         </div>
 
         <button onClick={() => navigate('/favoritos')}>

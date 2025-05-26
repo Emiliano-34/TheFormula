@@ -5,7 +5,8 @@ import {
   getProductById,
   getProductosRelacionados,
   getAllProducts,
-  getOfertasActivas // ✅ agregado
+  getOfertasActivas, // ✅ agregado
+  searchProducts
 } from '../controllers/productController.js';
 
 const router = express.Router();
@@ -15,7 +16,8 @@ router.get('/featured', getFeaturedProducts);
 router.get('/categories', getCategories);
 router.get('/relacionados/:categoriaId/:productoId', getProductosRelacionados);
 router.get('/all', getAllProducts);
-router.get('/ofertas', getOfertasActivas); // ✅ agregada aquí
-router.get('/:id', getProductById); // ← debe ir al final
+router.get('/ofertas', getOfertasActivas);
+router.get('/search', searchProducts); // ✅ CORRECTO aquí
+router.get('/:id', getProductById);    // ✅ debe ir al final
 
 export default router;
