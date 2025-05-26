@@ -19,7 +19,6 @@ const MetodosPago = () => {
     tipoId: ''
   });
 
-  // Formatear MM/AA desde YYYY-MM-DD
   const formatearFecha = (fecha) => {
     if (!fecha) return '';
     const date = new Date(fecha);
@@ -65,12 +64,10 @@ const MetodosPago = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const metodo = { ...formulario };
-
       await fetch(`http://localhost:3001/api/users/${user.id}/pago`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(metodo)
+        body: JSON.stringify(formulario)
       });
 
       await fetchMetodos();
@@ -92,6 +89,20 @@ const MetodosPago = () => {
     });
     setEditandoId(metodo.id_metodo);
     setMostrarFormulario(true);
+  };
+
+  const handleEliminar = async (idMetodo) => {
+    if (!window.confirm('¿Estás seguro de eliminar este método de pago?')) return;
+
+    try {
+      await fetch(`http://localhost:3001/api/users/${user.id}/pago/${idMetodo}`, {
+  method: 'DELETE'
+});
+
+      await fetchMetodos();
+    } catch (err) {
+      console.error('Error al eliminar método:', err);
+    }
   };
 
   const mostrarUltimos4 = (numeroEnmascarado) => {
@@ -122,6 +133,9 @@ const MetodosPago = () => {
                 <p><strong>Número:</strong> {mostrarUltimos4(metodo.numero_enmascarado)}</p>
                 <p><strong>Tipo:</strong> {metodo.tipo}</p>
                 <button onClick={() => handleEditar(metodo)}>Editar método de pago</button>
+                <button onClick={() => handleEliminar(metodo.id_metodo)} style={{ marginLeft: '0.5rem', backgroundColor: '#c0392b', color: 'white' }}>
+                  Eliminar
+                </button>
 
                 {editandoId === metodo.id_metodo && mostrarFormulario && (
                   <form onSubmit={handleSubmit} className="perfil-form" style={{ marginTop: '1rem' }}>

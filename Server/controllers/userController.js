@@ -386,3 +386,29 @@ export const getTiposMetodoPago = async (req, res) => {
     res.status(500).json({ success: false, error: 'Error al obtener tipos' });
   }
 };
+
+export const deleteMetodoPagoByUserId = async (req, res) => {
+  const id = parseInt(req.params.id);
+  const idMetodo = parseInt(req.params.idMetodo);
+
+  if (isNaN(id) || isNaN(idMetodo)) {
+    return res.status(400).json({ success: false, error: 'ID inválido' });
+  }
+
+  try {
+    const pool = await poolPromise;
+
+    await pool.request()
+      .input('idMetodo', sql.Int, idMetodo)
+      .input('idUsuario', sql.Int, id)
+      .query(`
+        DELETE FROM METODOS_PAGO
+        WHERE ID_METODO = @idMetodo AND ID_USUARIO = @idUsuario
+      `);
+
+    res.json({ success: true, message: 'Método de pago eliminado correctamente' });
+  } catch (err) {
+    console.error('❌ Error al eliminar método de pago:', err);
+    res.status(500).json({ success: false, error: 'Error del servidor' });
+  }
+};
