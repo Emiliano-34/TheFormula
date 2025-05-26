@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+
 import cartRoutes from './routes/cartRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import productRoutes from './routes/productRoutes.js';
@@ -7,9 +8,10 @@ import productRoutes from './routes/productRoutes.js';
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-// Configuración de CORS para permitir solicitudes desde el frontend
+// ✅ Configuración correcta de CORS:
 app.use(cors({
-  origin: 'http://localhost:5173',
+  origin: 'http://localhost:5173', // Dirección de tu frontend
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true
 }));
 

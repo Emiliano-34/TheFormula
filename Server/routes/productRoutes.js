@@ -4,19 +4,19 @@ import {
   getFlashDealProducts,
   getCategories,
   getProductById,
-  getProductosRelacionados
+  getProductosRelacionados,
+  getAllProducts
 } from '../controllers/productController.js';
 
 const router = express.Router();
 
+// ⚠️ ESTE ORDEN ES IMPORTANTE
 router.get('/featured', getFeaturedProducts);
 router.get('/flash-deals', getFlashDealProducts);
 router.get('/categories', getCategories);
-
-// 🚨 Nueva ruta para obtener producto por ID
-router.get('/:id', getProductById);
-// Nueva ruta backend (productRoutes.js)
-router.get('/relacionados/:categoriaId', getProductosRelacionados);
+router.get('/relacionados/:categoriaId/:productoId', getProductosRelacionados); // 👈 DEBE IR ANTES
+router.get('/all', getAllProducts);
+router.get('/:id', getProductById); // 👈 SIEMPRE AL FINAL
 
 
 export default router;

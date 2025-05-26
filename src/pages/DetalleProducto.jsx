@@ -12,35 +12,40 @@ const DetallesProducto = () => {
   const [cantidad, setCantidad] = useState(1);
   const { addToCart } = useCart();
 
-  useEffect(() => {
-    const fetchProducto = async () => {
-      try {
-        const res = await fetch(`http://localhost:3001/api/products/${id}`);
-        const data = await res.json();
+ useEffect(() => {
+  const fetchProducto = async () => {
+    try {
+      const res = await fetch(`http://localhost:3001/api/products/${id}`);
+      if (!res.ok) throw new Error('Respuesta no válida del servidor');
 
-        if (!data.success) {
-          setProducto(false);
-          return;
-        }
-
-        setProducto(data.product);
-
-        // Cargar productos relacionados si hay categoriaId
-        if (data.product?.categoriaId) {
-          const relacionadosRes = await fetch(`http://localhost:3001/api/products/relacionados/${data.product.categoriaId}`);
-          const relacionadosData = await relacionadosRes.json();
-          if (relacionadosData.success) {
-            setRelacionados(relacionadosData.products);
-          }
-        }
-      } catch (err) {
-        console.error('Error al cargar el producto:', err);
+      const data = await res.json();
+      if (!data.success || !data.product) {
         setProducto(false);
+        return;
       }
-    };
 
-    fetchProducto();
-  }, [id]);
+      setProducto(data.product);
+
+      // productos relacionados
+      if (data.product.categoriaId) {
+        const relRes = await fetch(
+          `http://localhost:3001/api/products/relacionados/${data.product.categoriaId}/${data.product.id}`
+        );
+        if (relRes.ok) {
+          const relData = await relRes.json();
+          if (relData.success) setRelacionados(relData.products || []);
+        }
+      }
+
+    } catch (err) {
+      console.error('Error al cargar el producto:', err);
+      setProducto(false);
+    }
+  };
+
+  fetchProducto();
+}, [id]);
+
 
   const handleAddToCart = () => {
     if (producto) {
@@ -63,8 +68,8 @@ const DetallesProducto = () => {
       <Header />
       <div className="detalle-container">
         <div className="galeria">
-          <img src={producto.image} alt="Mini" />
-          <img src={producto.image} alt="Mini" />
+          <img src={producto.image} alt={`${producto.name} miniatura 1`} />
+          <img src={producto.image} alt={`${producto.name} miniatura 2`} />
         </div>
 
         <div className="principal">
@@ -73,7 +78,9 @@ const DetallesProducto = () => {
 
         <div className="info">
           <h1>{producto.name}</h1>
-          <div style={{ color: '#e67e22', fontSize: '14px' }}>{producto.reviews} reseñas</div>
+          <div style={{ color: '#e67e22', fontSize: '14px' }}>
+            {producto.reviews} reseñas
+          </div>
           <div className="precio">${Number(producto.price).toFixed(2)}</div>
           <div className="estado">En existencia</div>
 

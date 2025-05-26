@@ -20,6 +20,7 @@ import Cart from './pages/Cart';
 import Favorites from './pages/Favorites';
 import Perfil from './pages/Perfil';
 import ResultadosBusqueda from './pages/ResultadosBusqueda';
+import TodosProductos from './pages/TodosProductos';
 
 import AdminLayout from './components/AdminLayout';
 import './App.css';
@@ -35,8 +36,8 @@ function App() {
       <Route path="/favoritos" element={<Favorites />} />
       <Route path="/perfil" element={<Perfil />} />
       <Route path="/buscar" element={<ResultadosBusqueda />} />
-        <Route path="/producto/:id" element={<DetalleProducto />} />
-
+      <Route path="/producto/:id" element={<DetalleProducto />} />
+      <Route path="/todos-productos" element={<TodosProductos />} />
 
       {/* Rutas protegidas del admin */}
       <Route
@@ -56,7 +57,6 @@ function App() {
         <Route path="PasoMarca" element={<PasoMarca />} />
         <Route path="Imagen" element={<Imagen />} />
         <Route path="Final" element={<Final />} />
-
       </Route>
     </Routes>
   );

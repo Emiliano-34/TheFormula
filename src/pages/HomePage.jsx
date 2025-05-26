@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import TopBanner from '../components/TopBanner';
 import Header from '../components/Header';
 import PromoBanner from '../components/PromoBanner';
@@ -9,6 +10,7 @@ import './HomePage.css';
 const API_URL = import.meta.env.VITE_API_URL;
 
 const HomePage = () => {
+  const navigate = useNavigate(); // ← necesario para redirigir
   const [featuredProducts, setFeaturedProducts] = useState([]);
   const [flashDeals, setFlashDeals] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -128,7 +130,9 @@ const HomePage = () => {
               <ProductCard key={product.id} product={product} />
             ))}
           </div>
-          <button className="view-all-btn">Ver Todos Los Productos</button>
+          <button className="view-all-btn" onClick={() => navigate('/todos-productos')}>
+            Ver Todos Los Productos
+          </button>
         </div>
       </section>
 
