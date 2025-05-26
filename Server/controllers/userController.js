@@ -325,14 +325,15 @@ export const getMetodoPagoByUserId = async (req, res) => {
       .input('id', sql.Int, id)
       .query(`
         SELECT 
-          MP.ID_METODO,
-          MP.TITULAR, 
-          MP.NUMERO_ENMASCARADO, 
-          MP.VENCIMIENTO, 
-          TP.NOMBRE AS tipo
-        FROM METODOS_PAGO MP
-        JOIN TIPOS_METODO_PAGO TP ON MP.ID_TIPO = TP.ID_TIPO
-        WHERE MP.ID_USUARIO = @id
+  MP.ID_METODO AS id_metodo, 
+  MP.TITULAR AS titular, 
+  MP.NUMERO_ENMASCARADO AS numero_enmascarado, 
+  MP.VENCIMIENTO as vencimiento, 
+  TP.NOMBRE AS tipo
+FROM METODOS_PAGO MP
+JOIN TIPOS_METODO_PAGO TP ON MP.ID_TIPO = TP.ID_TIPO
+WHERE MP.ID_USUARIO = @id
+
       `);
 
     if (!result.recordset.length) {
