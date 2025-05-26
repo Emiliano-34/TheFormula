@@ -7,13 +7,20 @@ export const getFeaturedProducts = async (req, res) => {
       SELECT 
         P.ID_PRODUCTO AS id,
         P.NOMBRE_PRODUCTO AS name,
-        P.PRECIO AS price,
-        P.COSTO AS originalPrice,
+        -- si hay oferta activa, se aplica el descuento, si no, se deja el precio normal
+        ISNULL(ROUND(P.PRECIO * (1 - O.DESCUENTO / 100.0), 2), P.PRECIO) AS price,
+        P.PRECIO AS originalPrice,
         P.IMAGEN_URL AS image,
         P.CALIFICACION AS rating,
         ISNULL(R.review_count, 0) AS reviews,
-        P.VENDIDOS AS sold
+        P.VENDIDOS AS sold,
+        O.DESCUENTO AS discountPercent
       FROM PRODUCTOS P
+      LEFT JOIN (
+        SELECT * FROM OFERTAS
+        WHERE FECHA_INICIO <= CAST(GETDATE() AS DATE)
+          AND FECHA_FIN >= CAST(GETDATE() AS DATE)
+      ) O ON P.ID_PRODUCTO = O.ID_PRODUCTO
       LEFT JOIN (
         SELECT ID_PRODUCTO, COUNT(*) AS review_count
         FROM RESENAS
@@ -29,39 +36,6 @@ export const getFeaturedProducts = async (req, res) => {
     res.status(500).json({ success: false, error: 'Error al obtener los productos destacados' });
   }
 };
-
-export const getFlashDealProducts = async (req, res) => {
-  const targetDate = '2025-04-25';
-  try {
-    const pool = await poolPromise;
-    const result = await pool.request()
-      .input('fecha', sql.Date, targetDate)
-      .query(`
-        SELECT 
-          P.ID_PRODUCTO AS id,
-          P.NOMBRE_PRODUCTO AS name,
-          P.PRECIO AS price,
-          P.COSTO AS original_price,
-          P.CALIFICACION AS rating,
-          HV.CANT_VENTAS AS sold_today,
-          ROUND((P.PRECIO - P.COSTO) / P.PRECIO * 100, 0) AS discount_percent
-        FROM PRODUCTOS P
-        JOIN HISTORIA_VENTAS HV ON P.ID_PRODUCTO = HV.ID_PRODUCTO
-        WHERE HV.FECHA = @fecha AND P.EXISTENCIAS > 0
-        ORDER BY HV.CANT_VENTAS DESC
-        OFFSET 0 ROWS FETCH NEXT 4 ROWS ONLY
-      `);
-    const products = result.recordset.map(p => ({
-      ...p,
-      deal_end: new Date(Date.now() + 86400000).toISOString()
-    }));
-    res.json({ success: true, products });
-  } catch (err) {
-    console.error('Error fetching flash deals:', err);
-    res.status(500).json({ success: false, error: 'Error al obtener ofertas fugaces' });
-  }
-};
-
 export const getCategories = async (req, res) => {
   try {
     const pool = await poolPromise;
@@ -134,16 +108,25 @@ export const getProductosRelacionados = async (req, res) => {
       .input('productoId', sql.Int, parsedProd)
       .query(`
         SELECT TOP 4 
-          ID_PRODUCTO AS id,
-          NOMBRE_PRODUCTO AS name,
-          PRECIO AS price,
-          IMAGEN_URL AS image
-        FROM PRODUCTOS
-        WHERE ID_CATEGORIA = @categoriaId 
-          AND EXISTENCIAS > 0 
-          AND ID_PRODUCTO != @productoId
+          P.ID_PRODUCTO AS id,
+          P.NOMBRE_PRODUCTO AS name,
+          ISNULL(ROUND(P.PRECIO * (1 - O.DESCUENTO / 100.0), 2), P.PRECIO) AS price,
+          P.PRECIO AS originalPrice,
+          P.IMAGEN_URL AS image,
+          O.DESCUENTO AS discountPercent
+        FROM PRODUCTOS P
+        LEFT JOIN (
+          SELECT * FROM OFERTAS
+          WHERE FECHA_INICIO <= CAST(GETDATE() AS DATE)
+            AND FECHA_FIN >= CAST(GETDATE() AS DATE)
+        ) O ON P.ID_PRODUCTO = O.ID_PRODUCTO
+        WHERE 
+          P.ID_CATEGORIA = @categoriaId 
+          AND P.EXISTENCIAS > 0 
+          AND P.ID_PRODUCTO != @productoId
         ORDER BY NEWID()
       `);
+
     res.json({ success: true, products: result.recordset });
   } catch (err) {
     console.error('Error al obtener productos relacionados:', err);
@@ -151,24 +134,59 @@ export const getProductosRelacionados = async (req, res) => {
   }
 };
 
+
 export const getAllProducts = async (req, res) => {
   try {
     const pool = await poolPromise;
     const result = await pool.request().query(`
       SELECT 
-        ID_PRODUCTO AS id,
-        NOMBRE_PRODUCTO AS name,
-        PRECIO AS price,
-        COSTO AS originalPrice,
-        ISNULL(IMAGEN_URL, '') AS image,
-        CALIFICACION AS rating,
-        ID_CATEGORIA AS categoriaId
-      FROM PRODUCTOS
-      WHERE EXISTENCIAS > 0
+        P.ID_PRODUCTO AS id,
+        P.NOMBRE_PRODUCTO AS name,
+        ISNULL(ROUND(P.PRECIO * (1 - O.DESCUENTO / 100.0), 2), P.PRECIO) AS price,
+        P.PRECIO AS originalPrice,
+        ISNULL(P.IMAGEN_URL, '') AS image,
+        P.CALIFICACION AS rating,
+        P.ID_CATEGORIA AS categoriaId,
+        O.DESCUENTO AS discountPercent
+      FROM PRODUCTOS P
+      LEFT JOIN (
+        SELECT * FROM OFERTAS
+        WHERE FECHA_INICIO <= CAST(GETDATE() AS DATE)
+          AND FECHA_FIN >= CAST(GETDATE() AS DATE)
+      ) O ON P.ID_PRODUCTO = O.ID_PRODUCTO
+      WHERE P.EXISTENCIAS > 0
     `);
     res.json({ success: true, products: result.recordset });
   } catch (err) {
     console.error('Error al obtener todos los productos:', err);
     res.status(500).json({ success: false, message: 'Error al obtener productos' });
+  }
+};
+
+export const getOfertasActivas = async (req, res) => {
+  try {
+    const pool = await poolPromise;
+    const result = await pool.request().query(`
+      SELECT 
+        O.ID_PRODUCTO AS id,
+        P.NOMBRE_PRODUCTO AS name,
+        ROUND(P.PRECIO * (1 - O.DESCUENTO / 100.0), 2) AS price,
+        P.PRECIO AS originalPrice,
+        P.IMAGEN_URL AS image,
+        P.CALIFICACION AS rating,
+        O.DESCUENTO AS discountPercent,
+        O.FECHA_FIN AS deal_end
+      FROM OFERTAS O
+      JOIN PRODUCTOS P ON P.ID_PRODUCTO = O.ID_PRODUCTO
+      WHERE 
+        O.FECHA_INICIO <= CAST(GETDATE() AS DATE)
+        AND O.FECHA_FIN >= CAST(GETDATE() AS DATE)
+        AND P.EXISTENCIAS > 0
+    `);
+
+    res.json({ success: true, products: result.recordset });
+  } catch (err) {
+    console.error('Error al obtener ofertas activas:', err);
+    res.status(500).json({ success: false, message: 'Error al obtener ofertas activas' });
   }
 };

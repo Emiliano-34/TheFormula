@@ -1,22 +1,21 @@
 import express from 'express';
 import { 
   getFeaturedProducts,
-  getFlashDealProducts,
   getCategories,
   getProductById,
   getProductosRelacionados,
-  getAllProducts
+  getAllProducts,
+  getOfertasActivas // ✅ agregado
 } from '../controllers/productController.js';
 
 const router = express.Router();
 
-// ⚠️ ESTE ORDEN ES IMPORTANTE
+// ⚠️ EL ORDEN ES IMPORTANTE
 router.get('/featured', getFeaturedProducts);
-router.get('/flash-deals', getFlashDealProducts);
 router.get('/categories', getCategories);
-router.get('/relacionados/:categoriaId/:productoId', getProductosRelacionados); // 👈 DEBE IR ANTES
+router.get('/relacionados/:categoriaId/:productoId', getProductosRelacionados);
 router.get('/all', getAllProducts);
-router.get('/:id', getProductById); // 👈 SIEMPRE AL FINAL
-
+router.get('/ofertas', getOfertasActivas); // ✅ agregada aquí
+router.get('/:id', getProductById); // ← debe ir al final
 
 export default router;

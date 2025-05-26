@@ -15,7 +15,7 @@ const ProductCard = ({ product, isDeal = false }) => {
     id = 0,
     name = 'Producto sin nombre',
     price = 0,
-    originalPrice,
+    originalPrice = null,
     image = '/placeholder.png',
     rating = 0,
     reviews = 0,
@@ -27,12 +27,9 @@ const ProductCard = ({ product, isDeal = false }) => {
     addToCart(cartProduct);
   };
 
-  const handleToggleFavorite = () => {
-    if (isFavorite(id)) {
-      removeFromFavorites(id);
-    } else {
-      addToFavorites(product);
-    }
+  const handleToggleFavorite = (e) => {
+    e.stopPropagation();
+    isFavorite(id) ? removeFromFavorites(id) : addToFavorites(product);
   };
 
   const irADetalles = () => {
@@ -40,7 +37,7 @@ const ProductCard = ({ product, isDeal = false }) => {
   };
 
   return (
-    <div className="product-card">
+    <div className={`product-card ${isDeal ? 'deal' : ''}`}>
       {isDeal && discountPercent !== null && (
         <div className="discount-badge">-{discountPercent}%</div>
       )}
@@ -49,25 +46,24 @@ const ProductCard = ({ product, isDeal = false }) => {
         {isFavorite(id) ? '❤️' : '🤍'}
       </button>
 
-      <div className="product-image-container" onClick={irADetalles} style={{ cursor: 'pointer' }}>
-        <img
-          src={image.startsWith('data:') ? image : image}
-          alt={name}
-          className="product-image"
-        />
+      <div className="product-image-container" onClick={irADetalles}>
+        <img src={image} alt={name} className="product-image" />
       </div>
 
       <div className="product-info">
         <h3 className="product-title">{name}</h3>
+
         <div className="price-container">
-          <span className="current-price">${Number(price).toFixed(2)}</span>
-          {originalPrice && (
+          {Number(originalPrice) > Number(price) && (
             <span className="original-price">${Number(originalPrice).toFixed(2)}</span>
           )}
+          <span className="current-price">${Number(price).toFixed(2)}</span>
         </div>
+
         <div className="rating">
           {'★'.repeat(Math.round(rating))} {reviews ? `(${reviews})` : ''}
         </div>
+
         <button className="add-to-cart-btn" onClick={handleAddToCart}>
           Añadir al carrito
         </button>

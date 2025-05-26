@@ -10,47 +10,34 @@ import './HomePage.css';
 const API_URL = import.meta.env.VITE_API_URL;
 
 const HomePage = () => {
-  const navigate = useNavigate(); // ← necesario para redirigir
+  const navigate = useNavigate();
   const [featuredProducts, setFeaturedProducts] = useState([]);
-  const [flashDeals, setFlashDeals] = useState([]);
+  const [adminDeals, setAdminDeals] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [timeLeft, setTimeLeft] = useState({
-    days: '00',
-    hours: '00',
-    minutes: '00',
-    seconds: '00'
-  });
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [featuredRes, dealsRes, categoriesRes] = await Promise.all([
+        const [featuredRes, ofertasRes, categoriesRes] = await Promise.all([
           fetch(`${API_URL}/products/featured`),
-          fetch(`${API_URL}/products/flash-deals`),
+          fetch(`${API_URL}/products/ofertas`),
           fetch(`${API_URL}/products/categories`)
         ]);
 
         if (!featuredRes.ok) throw new Error('Error en productos destacados');
-        if (!dealsRes.ok) throw new Error('Error en ofertas');
+        if (!ofertasRes.ok) throw new Error('Error en ofertas admin');
         if (!categoriesRes.ok) throw new Error('Error en categorías');
 
         const featuredData = await featuredRes.json();
-        const dealsData = await dealsRes.json();
+        const ofertasData = await ofertasRes.json();
         const categoriesData = await categoriesRes.json();
 
-        if (featuredData?.success && Array.isArray(featuredData.products)) {
-          setFeaturedProducts(featuredData.products);
-        }
+        if (featuredData.success) setFeaturedProducts(featuredData.products);
+        if (ofertasData.success) setAdminDeals(ofertasData.products.map(p => ({ ...p, isDeal: true })));
+        if (categoriesData.success) setCategories(categoriesData.categories);
 
-        if (dealsData?.success && Array.isArray(dealsData.products)) {
-          setFlashDeals(dealsData.products);
-        }
-
-        if (categoriesData?.success && Array.isArray(categoriesData.categories)) {
-          setCategories(categoriesData.categories);
-        }
       } catch (err) {
         console.error('Error al cargar:', err);
         setError(err.message);
@@ -60,30 +47,6 @@ const HomePage = () => {
     };
 
     fetchData();
-  }, []);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      const now = new Date();
-      const endOfDay = new Date();
-      endOfDay.setHours(23, 59, 59, 999);
-
-      const diff = endOfDay - now;
-
-      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-
-      setTimeLeft({
-        days: days.toString().padStart(2, '0'),
-        hours: hours.toString().padStart(2, '0'),
-        minutes: minutes.toString().padStart(2, '0'),
-        seconds: seconds.toString().padStart(2, '0')
-      });
-    }, 1000);
-
-    return () => clearInterval(timer);
   }, []);
 
   if (error) return <div className="error-message">Error: {error}</div>;
@@ -96,27 +59,16 @@ const HomePage = () => {
         buttonText="Comprar Ahora"
       />
       <Header />
-      <PromoBanner text="25% OFF EN PRODUCTOS MARCA MUTANT - Hoy" />
+      <div className="promo-banner">
+      <p>25% DE DESCUENTO EN PRODUCTOS MUTANT - Hoy</p>
+    </div>
 
-      <section className="flash-deals">
+      <section className="admin-deals">
         <div className="container">
-          <div className="section-header">
-            <h2 className="section-title">Ofertas fugaces</h2>
-            <div className="countdown-timer">
-              {['days', 'hours', 'minutes', 'seconds'].map((unit, i) => (
-                <React.Fragment key={unit}>
-                  <div className="time-block">
-                    <span className="time-value">{timeLeft[unit]}</span>
-                    <span className="time-label">{unit.charAt(0).toUpperCase() + unit.slice(1)}</span>
-                  </div>
-                  {i < 3 && <span className="time-separator">:</span>}
-                </React.Fragment>
-              ))}
-            </div>
-          </div>
+          <h2 className="section-title">Ofertas Especiales</h2>
           <div className="products-grid">
-            {flashDeals.map(product => (
-              <ProductCard key={product.id} product={product} isDeal={true} />
+            {adminDeals.map((product, index) => (
+              <ProductCard key={`admin-${product.id}-${index}`} product={product} />
             ))}
           </div>
         </div>
@@ -126,8 +78,8 @@ const HomePage = () => {
         <div className="container">
           <h2 className="section-title">Productos Destacados</h2>
           <div className="products-grid">
-            {featuredProducts.map(product => (
-              <ProductCard key={product.id} product={product} />
+            {featuredProducts.map((product, index) => (
+              <ProductCard key={`featured-${product.id}-${index}`} product={product} />
             ))}
           </div>
           <button className="view-all-btn" onClick={() => navigate('/todos-productos')}>
