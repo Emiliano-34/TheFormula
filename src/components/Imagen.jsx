@@ -12,7 +12,7 @@ const Imagen = () => {
   const [preview, setPreview] = useState(null);
 
   const handleFinish = () => {
-    navigate('/Final');
+    navigate('/admin/Final');
   };
 
   const handleFileChange = (event) => {

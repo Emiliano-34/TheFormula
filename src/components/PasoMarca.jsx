@@ -8,7 +8,7 @@ const PasoMarca = () => {
   const navigate = useNavigate();
 
   const handleNext = () => {
-    navigate('/Imagen');
+    navigate('/admin/Imagen');
   };
 
   return (
