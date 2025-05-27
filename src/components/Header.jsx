@@ -71,18 +71,27 @@ function Header() {
           <img src={carrito} alt="Carrito" />
         </button>
 
-        <div className="user-panel-container" ref={panelRef}>
-          <button onClick={togglePanel}>
-            <img src={usuario} alt="Usuario" />
-          </button>
-          {showPanel && user && (
-            <div className="user-panel">
-              <p>Hola, {user.nombre}</p>
-              <button onClick={() => navigate('/perfil')}>Ver perfil</button>
-              <button className="logout-btn" onClick={logout}>Cerrar sesión</button>
-            </div>
-          )}
-        </div>
+        {user && (
+          <div className="user-panel-container" ref={panelRef}>
+            <button onClick={togglePanel}>
+              <img src={usuario} alt="Usuario" />
+            </button>
+
+            {showPanel && (
+              <div className="user-panel">
+                <p>Hola, {user.nombre}</p>
+                <p style={{ fontSize: '12px', color: '#888' }}>Rol: {user.rol}</p>
+                <button onClick={() => navigate('/perfil')}>Ver perfil</button>
+
+                {user.rol === 'admin' && (
+                  <button onClick={() => navigate('/admin')}>Panel de admin</button>
+                )}
+
+                <button className="logout-btn" onClick={logout}>Cerrar sesión</button>
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </header>
   );

@@ -55,7 +55,7 @@ const DetallesProducto = () => {
           </div>
 
           <div className="form-button">
-          <Link to="/paso3">
+          <Link to="/admin/paso3">
           <button type="button" className="btn">Siguiente</button>
           </Link>
 

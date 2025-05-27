@@ -7,7 +7,7 @@ function AgregarProducto() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    navigate('/detalles');
+    navigate('/admin/detalles');
   };
 
   return (

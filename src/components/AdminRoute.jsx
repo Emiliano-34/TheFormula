@@ -9,7 +9,7 @@ const AdminRoute = ({ children }) => {
   }
 
   if (user.rol !== 'admin') {
-    return <Navigate to="/" />;
+    return <Navigate to="PanelAdmin" />;
   }
 
   return children;

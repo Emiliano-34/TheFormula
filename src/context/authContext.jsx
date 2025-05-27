@@ -52,7 +52,7 @@ export const AuthProvider = ({ children }) => {
         },
         body: JSON.stringify({
           nombre: form.nombre,
-          apellido: form.apellido, // ✅ nombre correcto
+          apellido: form.apellido,
           correo: form.correo.trim().toLowerCase(),
           telefono: form.telefono,
           contrasena: form.contrasena
@@ -89,19 +89,26 @@ useEffect(() => {
     try {
       const parsed = JSON.parse(storedUser);
 
-      // Normalizar claves (si vienen en mayúsculas del backend)
       const normalizedUser = {
         id: parsed.id,
         nombre: parsed.nombre ?? parsed.NOMBRE ?? '',
         apellido: parsed.apellido ?? parsed.APELLIDO ?? '',
         correo: parsed.correo ?? parsed.CORREO ?? '',
         telefono: parsed.telefono ?? parsed.TELEFONO ?? '',
-        rol: parsed.rol ?? parsed.ROL ?? (parsed.admin ? 'admin' : 'user')
+        rol:
+          parsed.rol?.toLowerCase?.() ??
+          parsed.ROL?.toLowerCase?.() ??
+          (parsed.admin === 1 || parsed.admin === true || parsed.admin === '1' ||
+           parsed.ADMIN === 1 || parsed.ADMIN === true || parsed.ADMIN === '1'
+            ? 'admin'
+            : 'user')
       };
+
+      console.log("✅ Usuario normalizado:", normalizedUser);
 
       setUser(normalizedUser);
     } catch (err) {
-      console.error('Error al parsear usuario almacenado:', err);
+      console.error('❌ Error al parsear usuario almacenado:', err);
     }
   }
 }, []);
