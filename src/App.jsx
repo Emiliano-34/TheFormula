@@ -23,6 +23,7 @@ import TodosProductos from './pages/TodosProductos';
 import Buscar from './pages/Buscar';
 import DireccionEnvio from './pages/DireccionEnvio';
 import MetodosPago from './pages/MetodosPago';
+import Checkout from './pages/checkout';
 
 import AdminLayout from './components/AdminLayout';
 import './App.css';
@@ -35,6 +36,7 @@ function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/cart" element={<Cart />} />
+      <Route path="/checkout" element={<Checkout />} />
       <Route path="/favoritos" element={<Favorites />} />
       <Route path="/perfil" element={<Perfil />} />
       <Route path="/producto/:id" element={<DetalleProducto />} />
