@@ -1,13 +1,18 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Stepper from './PasoStepper';
 import './Dimensiones.css';
 
 const Dimensiones = () => {
   const navigate = useNavigate();
+  const formRef = useRef();
 
   const handleNext = () => {
-    navigate('/admin/pasoMarca'); // 🔁 Ruta corregida
+    if (formRef.current.checkValidity()) {
+      navigate('/admin/pasoMarca');
+    } else {
+      formRef.current.reportValidity();
+    }
   };
 
   return (
@@ -22,7 +27,7 @@ const Dimensiones = () => {
       <Stepper currentStep={3} />
 
       <div className="form-card centered-card">
-        <form className="form-grid">
+        <form className="form-grid" ref={formRef}>
           <div className="form-group">
             <label>Altura*</label>
             <input type="number" placeholder="0 cm" required />
