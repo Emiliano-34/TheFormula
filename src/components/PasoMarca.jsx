@@ -1,14 +1,18 @@
-// src/components/PasoMarca.js
-import React from 'react';
+import React, { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Stepper from './PasoStepper';
 import './PasoMarca.css';
 
 const PasoMarca = () => {
   const navigate = useNavigate();
+  const formRef = useRef();
 
   const handleNext = () => {
-    navigate('/admin/Imagen');
+    if (formRef.current.checkValidity()) {
+      navigate('/admin/Imagen');
+    } else {
+      formRef.current.reportValidity();
+    }
   };
 
   return (
@@ -23,12 +27,11 @@ const PasoMarca = () => {
       <Stepper currentStep={4} />
 
       <div className="form-card centered-card">
-        <form className="form-grid">
+        <form className="form-grid" ref={formRef}>
           <div className="form-group">
             <label>Marca*</label>
             <input type="text" placeholder="Ingrese marca" required />
           </div>
-
 
           <div className="form-group">
             <label>Material*</label>
