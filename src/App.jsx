@@ -11,6 +11,7 @@ import ActualizarInventario from './components/ActualizarInventario';
 import PanelAdmin from './pages/PanelAdmin';
 import AdminRoute from './components/AdminRoute';
 import Productos from './components/Productos';
+import HistorialPedidos from './pages/HistorialPedidos';
 
 import DetalleProducto from './pages/DetalleProducto';
 import HomePage from './pages/HomePage';
@@ -42,8 +43,9 @@ function App() {
       <Route path="/producto/:id" element={<DetalleProducto />} />
       <Route path="/todos-productos" element={<TodosProductos />} />
       <Route path="/buscar" element={<Buscar />} />
-<Route path="/direccion-envio" element={<DireccionEnvio />} />
-<Route path="/metodos-pago" element={<MetodosPago />} />
+      <Route path="/direccion-envio" element={<DireccionEnvio />} />
+      <Route path="/metodos-pago" element={<MetodosPago />} />
+      <Route path="/historial-pedidos" element={<HistorialPedidos />} />
       {/* Rutas protegidas del admin */}
       <Route
         path="/admin"
