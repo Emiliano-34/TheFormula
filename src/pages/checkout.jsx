@@ -22,14 +22,20 @@ const Checkout = () => {
     // Usar un ID fijo o luego el real
     const direccionId = 1;
 
-    const pedido = {
-      userId: user.id,
-      direccionId,
-      productos: cartItems.map(item => ({
-        id: item.id,
-        quantity: item.quantity,
-      })),
-    };
+const pedido = {
+  userId: user.id,
+  direccionId,
+  productos: cartItems.map(item => ({
+    id: item.id,
+    quantity: item.quantity,
+  })),
+  total: cartTotal,
+};
+
+console.log('Pedido que se enviará:', pedido);
+
+
+
 
     try {
 const res = await fetch('http://localhost:3001/api/pedidos', {

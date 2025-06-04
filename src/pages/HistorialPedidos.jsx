@@ -10,7 +10,6 @@ const HistorialPedidos = () => {
     async function fetchPedidos() {
       try {
         const res = await fetch('http://localhost:3001/api/pedidos');
-
         const data = await res.json();
         if (data.success) {
           setPedidos(data.pedidos);
@@ -38,6 +37,8 @@ const HistorialPedidos = () => {
                 <p><strong>Fecha:</strong> {new Date(pedido.fecha).toLocaleDateString()}</p>
                 <p><strong>ID Dirección:</strong> {pedido.direccionId}</p>
                 <p><strong>Estado:</strong> {pedido.estado}</p>
+                <p><strong>Total:</strong> ${Number(pedido.total || 0).toFixed(2)}</p>
+
               </div>
             ))
           )}
