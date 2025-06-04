@@ -9,10 +9,49 @@ const Checkout = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
 
-  const handlePlaceOrder = () => {
-    alert('✅ Pedido realizado con éxito');
-    clearCart();
-    navigate('/');
+  const handlePlaceOrder = async () => {
+    if (!user?.id) {
+      alert('Debes iniciar sesión para realizar la compra');
+      return;
+    }
+    if (!cartItems.length) {
+      alert('El carrito está vacío');
+      return;
+    }
+
+    // Usar un ID fijo o luego el real
+    const direccionId = 1;
+
+    const pedido = {
+      userId: user.id,
+      direccionId,
+      productos: cartItems.map(item => ({
+        id: item.id,
+        quantity: item.quantity,
+      })),
+    };
+
+    try {
+const res = await fetch('http://localhost:3001/api/pedidos', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify(pedido),
+});
+
+
+      const data = await res.json();
+
+      if (data.success) {
+        alert('✅ Pedido realizado con éxito');
+        clearCart();
+        navigate('/historial-pedidos');
+      } else {
+        alert('❌ Error al guardar el pedido: ' + (data.error || 'Desconocido'));
+      }
+    } catch (error) {
+      console.error('Error al realizar pedido:', error);
+      alert('❌ Error de conexión');
+    }
   };
 
   const handleAddPaymentMethod = () => {
@@ -49,11 +88,7 @@ const Checkout = () => {
           </div>
 
           <div className="delivery-box">
-            <p>
-              <strong>Entregamos tu paquete el dia </strong><br />
-              en <br />
-
-            </p>
+            <p><strong>Entregamos tu paquete el día</strong><br />en tu dirección registrada.</p>
           </div>
 
           <button className="buy-again-btn" onClick={handlePlaceOrder}>

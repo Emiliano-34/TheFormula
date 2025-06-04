@@ -1,9 +1,27 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Header from '../components/Header';
 import SidebarCuenta from '../components/SidebarCuenta';
-import './Perfil.css'; // Puedes usar el mismo CSS del perfil para estilos
+import './Perfil.css';
 
 const HistorialPedidos = () => {
+  const [pedidos, setPedidos] = useState([]);
+
+  useEffect(() => {
+    async function fetchPedidos() {
+      try {
+        const res = await fetch('http://localhost:3001/api/pedidos');
+
+        const data = await res.json();
+        if (data.success) {
+          setPedidos(data.pedidos);
+        }
+      } catch (error) {
+        console.error('Error al cargar pedidos:', error);
+      }
+    }
+    fetchPedidos();
+  }, []);
+
   return (
     <>
       <Header />
@@ -11,8 +29,18 @@ const HistorialPedidos = () => {
         <SidebarCuenta />
         <main className="perfil-content">
           <h2>Historial de pedidos</h2>
-          {/* Aquí irá la lista de pedidos cuando la implementes */}
-          <p>Aquí se mostrarán los pedidos realizados.</p>
+          {pedidos.length === 0 ? (
+            <p>No hay pedidos realizados todavía.</p>
+          ) : (
+            pedidos.map(pedido => (
+              <div key={pedido.id} className="pedido-item">
+                <p><strong>ID pedido:</strong> {pedido.id}</p>
+                <p><strong>Fecha:</strong> {new Date(pedido.fecha).toLocaleDateString()}</p>
+                <p><strong>ID Dirección:</strong> {pedido.direccionId}</p>
+                <p><strong>Estado:</strong> {pedido.estado}</p>
+              </div>
+            ))
+          )}
         </main>
       </div>
     </>
