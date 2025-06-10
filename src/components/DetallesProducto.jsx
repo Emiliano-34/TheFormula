@@ -1,16 +1,24 @@
 import React, { useState } from 'react';
-import Stepper from './PasoStepper';
 import { useNavigate } from 'react-router-dom';
+import Stepper from './PasoStepper';
 import './DetallesProducto.css';
+
+const categoriasFijas = [
+  { id: 1, nombre: 'Proteínas' },
+  { id: 2, nombre: 'Vitaminas' },
+  { id: 3, nombre: 'Pre-entrenadores' },
+  { id: 4, nombre: 'Creatinas' },
+  { id: 5, nombre: 'Omegas y Probióticos' },
+];
 
 const DetallesProducto = () => {
   const navigate = useNavigate();
+
   const [form, setForm] = useState({
     categoria: '',
-    sku: '',
     codigo: '',
     precio: '',
-    costo: ''
+    costo: '',
   });
 
   const handleChange = (e) => {
@@ -20,7 +28,8 @@ const DetallesProducto = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (Object.values(form).every((v) => v.trim() !== '')) {
-      navigate('/admin/paso3');
+      // Aquí puedes hacer llamada a backend para guardar producto nuevo
+      navigate('/admin/Imagen');
     } else {
       alert('Por favor, complete todos los campos');
     }
@@ -40,19 +49,20 @@ const DetallesProducto = () => {
       <div className="form-card">
         <form className="form-grid" onSubmit={handleSubmit}>
           <div className="form-group">
-            <label>categoría*</label>
-            <select name="categoria" value={form.categoria} onChange={handleChange} required>
+            <label>Categoría*</label>
+            <select
+              name="categoria"
+              value={form.categoria}
+              onChange={handleChange}
+              required
+            >
               <option value="">Selecciona una categoría</option>
-              <option value="proteina">Proteína</option>
-              <option value="vitaminas">Vitaminas</option>
+              {categoriasFijas.map(cat => (
+                <option key={cat.id} value={cat.id}>{cat.nombre}</option>
+              ))}
             </select>
           </div>
-
-          <div className="form-group">
-            <label>SKU*</label>
-            <input name="sku" type="text" placeholder="Ej. 123456" value={form.sku} onChange={handleChange} required />
-          </div>
-
+              
           <div className="form-group">
             <label>Código de barras*</label>
             <input
@@ -70,12 +80,26 @@ const DetallesProducto = () => {
 
           <div className="form-group">
             <label>Precio*</label>
-            <input name="precio" type="number" placeholder="Ej. $100.00" value={form.precio} onChange={handleChange} required />
+            <input
+              name="precio"
+              type="number"
+              placeholder="Ej. $100.00"
+              value={form.precio}
+              onChange={handleChange}
+              required
+            />
           </div>
 
           <div className="form-group" style={{ flex: '1 1 100%' }}>
             <label>Costo*</label>
-            <input name="costo" type="number" placeholder="Ej. $50.00" value={form.costo} onChange={handleChange} required />
+            <input
+              name="costo"
+              type="number"
+              placeholder="Ej. $50.00"
+              value={form.costo}
+              onChange={handleChange}
+              required
+            />
           </div>
 
           <div className="form-button">

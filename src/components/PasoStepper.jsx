@@ -4,7 +4,7 @@ import check from '../assets/check.png';
 import './Stepper.css';
 
 const Stepper = ({ currentStep = 1 }) => {
-  const steps = [1, 2, 3, 4, 5];
+  const steps = [1, 2, 3];
 
   return (
     <div className="stepper">

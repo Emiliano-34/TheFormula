@@ -25,30 +25,11 @@ function AgregarProducto() {
         <div className="line"></div>
         <div className="step">03</div>
         <div className="line"></div>
-        <div className="step">04</div>
-        <div className="line"></div>
-        <div className="step">05</div>
       </div>
 
       <form onSubmit={handleSubmit}>
         <label>Nombre del producto*</label>
         <input type="text" placeholder="Ingrese el nombre del producto" required />
-
-        <p>Tipo de producto*</p>
-        <label>
-          <input type="radio" name="tipo" required /> Producto con inventario
-        </label>
-        <small>Objetos físicos cuya cantidad debe ser controlada en inventario.</small>
-
-        <label>
-          <input type="radio" name="tipo" /> Producto sin inventario
-        </label>
-        <small>Producto físico que no se gestiona mediante control de inventario; su cantidad no se rastrea.</small>
-
-        <label>
-          <input type="radio" name="tipo" /> Producto serializado
-        </label>
-        <small>Producto físico que no se gestiona mediante control de inventario; su cantidad no se rastrea.</small>
 
         <button className="btn" type="submit">Siguiente</button>
       </form>
