@@ -80,7 +80,6 @@
   background-color: #c0392b;
 }
 
-
 .price-container {
   display: flex;
   flex-direction: column;
@@ -97,4 +96,45 @@
   color: #e74c3c;
   font-size: 18px;
   font-weight: bold;
+}
+
+/* NUEVOS ESTILOS PARA FILTRO DE CATEGORÍA */
+.filtro-categoria {
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  color: #333;
+}
+
+.filtro-categoria label {
+  margin-right: 10px;
+  font-weight: 600;
+}
+
+.filtro-categoria select {
+  padding: 6px 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  cursor: pointer;
+  background-color: white;
+  transition: border-color 0.2s;
+}
+
+.filtro-categoria select:hover,
+.filtro-categoria select:focus {
+  border-color: #d63d3d;
+  outline: none;
+}
+/* Opcional: agrega un pequeño efecto hover en inputs y selects */
+
+select, input[type="text"] {
+  transition: border-color 0.3s ease;
+}
+
+select:hover, input[type="text"]:hover,
+select:focus, input[type="text"]:focus {
+  border-color: #d63d3d;
+  outline: none;
 }

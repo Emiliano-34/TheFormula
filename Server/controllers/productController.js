@@ -140,20 +140,14 @@ export const getAllProducts = async (req, res) => {
     const result = await pool.request().query(`
       SELECT 
         P.ID_PRODUCTO AS id,
-        P.NOMBRE_PRODUCTO AS name,
-        ISNULL(ROUND(P.PRECIO * (1 - O.DESCUENTO / 100.0), 2), P.PRECIO) AS price,
-        P.PRECIO AS originalPrice,
-        ISNULL(P.IMAGEN_URL, '') AS image,
-        P.CALIFICACION AS rating,
+        P.NOMBRE_PRODUCTO AS nombre,
+        P.CODIGO_BARRAS AS codigo_barras,
         P.ID_CATEGORIA AS categoriaId,
-        O.DESCUENTO AS discountPercent
+        P.PRECIO AS precio,
+        P.COSTO AS costo,
+        P.EXISTENCIAS AS existencias,
+        ISNULL(P.IMAGEN_URL, '') AS imagen
       FROM PRODUCTOS P
-      LEFT JOIN (
-        SELECT * FROM OFERTAS
-        WHERE FECHA_INICIO <= CAST(GETDATE() AS DATE)
-          AND FECHA_FIN >= CAST(GETDATE() AS DATE)
-      ) O ON P.ID_PRODUCTO = O.ID_PRODUCTO
-      WHERE P.EXISTENCIAS > 0
     `);
     res.json({ success: true, products: result.recordset });
   } catch (err) {
@@ -161,6 +155,7 @@ export const getAllProducts = async (req, res) => {
     res.status(500).json({ success: false, message: 'Error al obtener productos' });
   }
 };
+
 
 export const getOfertasActivas = async (req, res) => {
   try {
