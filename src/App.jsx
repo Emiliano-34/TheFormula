@@ -8,6 +8,7 @@ import AdminRoute from './components/AdminRoute';
 import Productos from './components/Productos';
 import HistorialPedidos from './pages/HistorialPedidos';
 
+
 import DetalleProducto from './pages/DetalleProducto';
 import HomePage from './pages/HomePage';
 import Login from './pages/Login';
@@ -53,6 +54,7 @@ function App() {
         <Route index element={<PanelAdmin />} />
         <Route path="productos" element={<Productos />} />
         <Route path="agregar-producto" element={<AgregarProducto />} />
+        <Route path="Actualizar-Inventario" element={<ActualizarInventario />} />
       </Route>
     </Routes>
   );

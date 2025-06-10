@@ -5,7 +5,10 @@ import cartRoutes from './routes/cartRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import productRoutes from './routes/productRoutes.js';
 import paymentRoutes from './routes/paymentRoutes.js';
-import pedidosRoutes from './routes/pedidosRoutes.js'; // <-- Agrega esta línea
+import pedidosRoutes from './routes/pedidosRoutes.js';
+import categoryRoutes from './routes/categoryRoutes.js' // <-- Agrega esta línea
+import inventarioRoutes from './routes/inventarioRoutes.js';
+
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -23,7 +26,9 @@ app.use('/api/cart', cartRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api', paymentRoutes);
-app.use('/api/pedidos', pedidosRoutes);  // <-- Agrega esta línea
+app.use('/api/pedidos', pedidosRoutes);
+app.use('/api/categorias', categoryRoutes); 
+app.use('/api/inventario', inventarioRoutes);
 
 app.get('/', (req, res) => {
   res.send('API funcionando correctamente');
