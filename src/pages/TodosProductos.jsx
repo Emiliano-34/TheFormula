@@ -1,24 +1,45 @@
 import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import './TodosProductos.css';
 import Header from '../components/Header';
 import ProductCard from '../components/ProductCard';
 
 const TodosProductos = () => {
+  const location = useLocation();
   const [productos, setProductos] = useState([]);
   const [categorias, setCategorias] = useState([]);
-  const [filtro, setFiltro] = useState(''); // categoría seleccionada
+  const [filtro, setFiltro] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const cargarProductos = () => {
+    setLoading(true);
+    fetch('http://localhost:3001/api/products/all')
+      .then(res => res.json())
+      .then(data => {
+        setProductos(data.products || []);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error('Error al cargar productos:', err);
+        setLoading(false);
+      });
+  };
 
   useEffect(() => {
-    fetch('http://localhost:3001/api/products/all')
-  .then(res => res.json())
-  .then(data => setProductos(data.products || []))
-  .catch(err => console.error('Error al cargar productos:', err));
+    cargarProductos();
 
     fetch('http://localhost:3001/api/products/categories')
       .then(res => res.json())
       .then(data => setCategorias(data.categories || []))
       .catch(err => console.error('Error al cargar categorías:', err));
   }, []);
+
+  // Detectar query para recargar cuando navegues aquí con reload=true
+  useEffect(() => {
+    if (location.search.includes('reload=true')) {
+      cargarProductos();
+    }
+  }, [location]);
 
   const productosFiltrados = filtro
     ? productos.filter(p => p.categoriaId === parseInt(filtro))
@@ -29,6 +50,8 @@ const TodosProductos = () => {
       <Header />
       <div className="productos-container">
         <h2>Todos los productos</h2>
+
+        {loading && <p>Cargando productos...</p>}
 
         <div className="filtros">
           <label>Filtrar por categoría:</label>

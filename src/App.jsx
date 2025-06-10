@@ -2,9 +2,6 @@ import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 
 import AgregarProducto from './components/AgregarProducto';
-import DetallesProducto from './components/DetallesProducto';
-import Imagen from './components/Imagen';
-import Final from './components/Final';
 import ActualizarInventario from './components/ActualizarInventario';
 import PanelAdmin from './pages/PanelAdmin';
 import AdminRoute from './components/AdminRoute';
@@ -56,10 +53,6 @@ function App() {
         <Route index element={<PanelAdmin />} />
         <Route path="productos" element={<Productos />} />
         <Route path="agregar-producto" element={<AgregarProducto />} />
-        <Route path="actualizar-inventario" element={<ActualizarInventario />} />
-        <Route path="detalles" element={<DetallesProducto />} />
-        <Route path="Imagen" element={<Imagen />} />
-        <Route path="Final" element={<Final />} />
       </Route>
     </Routes>
   );

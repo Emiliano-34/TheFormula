@@ -5,8 +5,9 @@ import {
   getProductById,
   getProductosRelacionados,
   getAllProducts,
-  getOfertasActivas, // ✅ agregado
-  searchProducts
+  getOfertasActivas,
+  searchProducts,
+  createProduct  // Importa la función para crear producto
 } from '../controllers/productController.js';
 
 const router = express.Router();
@@ -17,7 +18,10 @@ router.get('/categories', getCategories);
 router.get('/relacionados/:categoriaId/:productoId', getProductosRelacionados);
 router.get('/all', getAllProducts);
 router.get('/ofertas', getOfertasActivas);
-router.get('/search', searchProducts); // ✅ CORRECTO aquí
-router.get('/:id', getProductById);    // ✅ debe ir al final
+router.get('/search', searchProducts); 
+router.get('/:id', getProductById);
+
+// Ruta para crear un producto nuevo
+router.post('/', createProduct);
 
 export default router;

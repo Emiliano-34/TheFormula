@@ -7,7 +7,6 @@ export const getFeaturedProducts = async (req, res) => {
       SELECT 
         P.ID_PRODUCTO AS id,
         P.NOMBRE_PRODUCTO AS name,
-        -- si hay oferta activa, se aplica el descuento, si no, se deja el precio normal
         ISNULL(ROUND(P.PRECIO * (1 - O.DESCUENTO / 100.0), 2), P.PRECIO) AS price,
         P.PRECIO AS originalPrice,
         P.IMAGEN_URL AS image,
@@ -36,6 +35,7 @@ export const getFeaturedProducts = async (req, res) => {
     res.status(500).json({ success: false, error: 'Error al obtener los productos destacados' });
   }
 };
+
 export const getCategories = async (req, res) => {
   try {
     const pool = await poolPromise;
@@ -134,7 +134,6 @@ export const getProductosRelacionados = async (req, res) => {
   }
 };
 
-
 export const getAllProducts = async (req, res) => {
   try {
     const pool = await poolPromise;
@@ -191,7 +190,6 @@ export const getOfertasActivas = async (req, res) => {
   }
 };
 
-// Añade esta función en productController.js
 export const searchProducts = async (req, res) => {
   const { q } = req.query;
 
@@ -223,12 +221,50 @@ export const searchProducts = async (req, res) => {
           AND O.FECHA_INICIO <= CAST(GETDATE() AS DATE)
           AND O.FECHA_FIN >= CAST(GETDATE() AS DATE)
         WHERE P.NOMBRE_PRODUCTO LIKE @q
-          AND P.EXISTENCIAS > 0
       `);
 
     res.json({ success: true, products: result.recordset });
   } catch (err) {
     console.error('Error en búsqueda:', err);
     res.status(500).json({ success: false, message: 'Error al buscar productos' });
+  }
+};
+
+
+// Función para crear producto nuevo
+export const createProduct = async (req, res) => {
+  const { nombre_producto, codigo_barras, id_categoria, precio, costo, descripcion, imagen_url } = req.body;
+
+  if (!nombre_producto || !codigo_barras || !id_categoria || !precio || !costo || !descripcion || !imagen_url) {
+    return res.status(400).json({ success: false, error: 'Datos incompletos' });
+  }
+
+  try {
+    const pool = await poolPromise;
+
+    // Generar un ID aleatorio para el producto (ejemplo: número entre 100000 y 999999)
+    const randomId = Math.floor(100000 + Math.random() * 900000);
+
+    const insertQuery = `
+      INSERT INTO PRODUCTOS 
+      (ID_PRODUCTO, NOMBRE_PRODUCTO, CODIGO_BARRAS, ID_CATEGORIA, PRECIO, COSTO, DESCRIPCION, EXISTENCIAS, CALIFICACION, IMAGEN_URL)
+      VALUES (@idProducto, @nombre, @codigo, @categoria, @precio, @costo, @descripcion, 0, 0, @imagenUrl)
+    `;
+
+    await pool.request()
+      .input('idProducto', sql.Int, randomId)
+      .input('nombre', sql.VarChar, nombre_producto)
+      .input('codigo', sql.VarChar, codigo_barras)
+      .input('categoria', sql.Int, id_categoria)
+      .input('precio', sql.Decimal(10, 2), precio)
+      .input('costo', sql.Decimal(10, 2), costo)
+      .input('descripcion', sql.VarChar, descripcion)
+      .input('imagenUrl', sql.VarChar, imagen_url)
+      .query(insertQuery);
+
+    res.json({ success: true, message: 'Producto agregado correctamente', idProducto: randomId });
+  } catch (error) {
+    console.error('Error al agregar producto:', error);
+    res.status(500).json({ success: false, error: error.message });
   }
 };
