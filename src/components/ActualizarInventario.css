@@ -1,0 +1,72 @@
+.form-container {
+    padding: 30px;
+  }
+  
+  .top-info {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  
+  .breadcrumb {
+    color: #999;
+  }
+  
+  .admin-name {
+    font-weight: bold;
+    color: #d32f2f;
+  }
+  
+  .titulo-formulario {
+    font-size: 24px;
+    color: #d32f2f;
+    margin-bottom: 20px;
+  }
+  
+  .centered-card {
+    max-width: 700px;
+    margin: 0 auto;
+  }
+  
+  .form-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  
+  .form-group {
+    flex: 1 1 45%;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .form-group label {
+    margin-bottom: 5px;
+    font-weight: 500;
+  }
+  
+  input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+  }
+  
+  .form-button {
+    margin-top: 20px;
+    text-align: right;
+    flex: 1 1 100%;
+  }
+  
+  .btn {
+    background-color: #d32f2f;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  
+  .btn:hover {
+    background-color: #b71c1c;
+  }
+  

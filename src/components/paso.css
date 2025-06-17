@@ -1,0 +1,126 @@
+/* Paso comunes */
+.top-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    color: #777;
+    margin-bottom: 10px;
+  }
+  
+  .breadcrumb span {
+    color: #000;
+    font-weight: 500;
+  }
+  
+  .welcome .admin-name {
+    color: #d63d3d;
+    font-weight: bold;
+  }
+  
+  .titulo-formulario {
+    color: #d63d3d;
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+  }
+  
+  .stepper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 20px 0;
+  }
+  
+  .step {
+    width: 35px;
+    height: 35px;
+    border: 2px solid black;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    background-color: white;
+    color: black;
+  }
+  
+  .step.active {
+    background-color: #d63d3d;
+    color: white;
+    border-color: #d63d3d;
+  }
+  
+  .step.completed {
+    background-color: #d63d3d;
+    border-color: #d63d3d;
+  }
+  
+  .step.completed img {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .line {
+    width: 30px;
+    height: 2px;
+    background-color: black;
+    margin: 0 5px;
+  }
+  
+  .form-container {
+    padding: 20px;
+    width: 100%;
+  }
+  
+  .form-card {
+    background-color: white;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
+  }
+  
+  .form-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  
+  .form-group {
+    flex: 1 1 45%;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .form-group label {
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+  
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+  
+  textarea {
+    resize: vertical;
+    min-height: 80px;
+  }
+  
+  .form-button {
+    flex-basis: 100%;
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+  }
+  
+  .btn {
+    background-color: #d63d3d;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  

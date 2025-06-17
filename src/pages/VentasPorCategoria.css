@@ -1,0 +1,10 @@
+.chart-container {
+  margin-left: 250px;
+  padding: 2rem;
+  box-sizing: border-box;
+}
+
+.chart-wrapper {
+  width: 550px;
+  height: 500px; /* necesaria para que la gráfica se muestre */
+}

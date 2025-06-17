@@ -1,0 +1,31 @@
+.user-menu {
+  position: relative;
+  display: inline-block;
+}
+
+.user-icon {
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+.dropdown {
+  position: absolute;
+  right: 0;
+  top: 40px;
+  background: white;
+  border: 1px solid #ccc;
+  padding: 10px;
+  z-index: 1000;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  border-radius: 5px;
+}
+
+.dropdown button {
+  background: none;
+  border: none;
+  font-size: 14px;
+  color: #e74c3c;
+  cursor: pointer;
+}

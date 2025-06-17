@@ -1,0 +1,19 @@
+.productos-container {
+  max-width: 1200px;
+  margin: auto;
+  padding: 20px;
+  font-family: sans-serif;
+}
+
+.filtros {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.grid-productos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
+}
