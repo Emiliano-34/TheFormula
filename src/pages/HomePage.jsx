@@ -1,5 +1,3 @@
-// src/pages/HomePage.jsx
-
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import TopBanner from '../components/TopBanner';
@@ -7,11 +5,8 @@ import Header from '../components/Header';
 import PromoBanner from '../components/PromoBanner';
 import ProductCard from '../components/ProductCard';
 import CategoryList from '../components/CategoryList';
+import API_URL from '../apiConfig'; // <-- ¡IMPORTANTE! Importamos la URL centralizada
 import './HomePage.css';
-
-// --- CORRECCIÓN CLAVE AQUÍ ---
-// La variable de entorno ya contiene la URL completa de tu backend
-const API_URL = import.meta.env.VITE_API_URL;
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -24,15 +19,10 @@ const HomePage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Si API_URL no está definida, no intentar hacer fetch
-        if (!API_URL) {
-          throw new Error("La URL de la API no está configurada. Revisa tus variables de entorno.");
-        }
-
         const [featuredRes, ofertasRes, categoriesRes] = await Promise.all([
           fetch(`${API_URL}/api/products/featured`),
           fetch(`${API_URL}/api/products/ofertas`),
-          fetch(`${API_URL}/api/categorias`) // <-- Ruta corregida
+          fetch(`${API_URL}/api/categorias`)
         ]);
 
         if (!featuredRes.ok) throw new Error('Error en productos destacados');
@@ -62,7 +52,6 @@ const HomePage = () => {
   if (loading) return <div className="loading-message">Cargando...</div>;
 
   return (
-    // ... (El resto del return se mantiene igual)
     <div className="home-page">
       <TopBanner 
         text="Regístrate y obtén 20% de descuento en tu primera compra"
@@ -78,7 +67,7 @@ const HomePage = () => {
           <h2 className="section-title">Ofertas Especiales</h2>
           <div className="products-grid">
             {adminDeals.map((product, index) => (
-              <ProductCard key={`admin-<span class="math-inline">\{product\.id\}\-</span>{index}`} product={product} />
+              <ProductCard key={`admin-${product.id}-${index}`} product={product} />
             ))}
           </div>
         </div>
@@ -89,7 +78,7 @@ const HomePage = () => {
           <h2 className="section-title">Productos Destacados</h2>
           <div className="products-grid">
             {featuredProducts.map((product, index) => (
-              <ProductCard key={`featured-<span class="math-inline">\{product\.id\}\-</span>{index}`} product={product} />
+              <ProductCard key={`featured-${product.id}-${index}`} product={product} />
             ))}
           </div>
           <button className="view-all-btn" onClick={() => navigate('/todos-productos')}>
