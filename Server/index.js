@@ -25,7 +25,6 @@ const allowedOrigins = [
 
 const corsOptions = {
   origin: function (origin, callback) {
-    // Permite peticiones sin origen (como Postman) o si el origen está en la lista blanca
     if (!origin || allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
@@ -34,10 +33,13 @@ const corsOptions = {
   },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // ¡CORRECCIÓN! Permitir el método OPTIONS
   credentials: true,
-  allowedHeaders: ['Content-Type', 'Authorization'] // ¡CORRECCIÓN! Permitir cabeceras comunes
+  allowedHeaders: ['Content-Type', 'Authorization'] // ¡CORRECCIÓN! Permitir cabeceras necesarias
 };
 
-// Usar la configuración de CORS para todas las rutas
+// Habilitar la respuesta a las peticiones pre-flight (de permiso)
+app.options('*', cors(corsOptions)); 
+
+// Usar la configuración de CORS para todas las demás rutas
 app.use(cors(corsOptions));
 // --- FIN DE LA CORRECCIÓN DE CORS ---
 
