@@ -6,7 +6,7 @@ import userRoutes from './routes/userRoutes.js';
 import productRoutes from './routes/productRoutes.js';
 import paymentRoutes from './routes/paymentRoutes.js';
 import pedidosRoutes from './routes/pedidosRoutes.js';
-import categoryRoutes from './routes/categoryRoutes.js' // <-- Agrega esta línea
+import categoryRoutes from './routes/categoryRoutes.js';
 import inventarioRoutes from './routes/inventarioRoutes.js';
 import ventasRoutes from './routes/ventasRoutes.js';
 import chatbotRoutes from './routes/chatbot.js';
@@ -16,13 +16,33 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const app = express();
+// Render te asignará un puerto, así que usamos process.env.PORT
 const PORT = process.env.PORT || 3001;
 
-app.use(cors({
-  origin: 'http://localhost:5173',
+// --- INICIO DE LA CORRECCIÓN DE CORS ---
+
+// Lista de orígenes permitidos (invitados a la fiesta)
+const allowedOrigins = [
+  'http://localhost:5173',          // Tu entorno de desarrollo local
+  'https://emiliano-34.github.io'   // Tu página en producción
+];
+
+const corsOptions = {
+  origin: function (origin, callback) {
+    // Permite peticiones sin origen (como Postman o apps móviles) o si el origen está en la lista blanca
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('No permitido por CORS'));
+    }
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true
-}));
+};
+
+app.use(cors(corsOptions));
+
+// --- FIN DE LA CORRECCIÓN DE CORS ---
 
 app.use(express.json());
 
@@ -32,7 +52,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api', paymentRoutes);
 app.use('/api/pedidos', pedidosRoutes);
-app.use('/api/categorias', categoryRoutes); 
+app.use('/api/categorias', categoryRoutes);
 app.use('/api/inventario', inventarioRoutes);
 app.use('/api/ventas', ventasRoutes);
 app.use('/chatbot', chatbotRoutes);
@@ -40,9 +60,10 @@ app.use('/api/resenas', resenasRoutes);
 app.use('/api', chatbotRoutes);
 
 app.get('/', (req, res) => {
-  res.send('API funcionando correctamente');
+  res.send('API funcionando correctamente');
 });
 
 app.listen(PORT, () => {
-  console.log(`Servidor backend escuchando en http://localhost:${PORT}`);
+  // Usamos 0.0.0.0 para asegurarnos de que escuche en la red de Render
+  console.log(`Servidor backend escuchando en el puerto ${PORT}`);
 });
