@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+
 import cartRoutes from './routes/cartRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import productRoutes from './routes/productRoutes.js';
@@ -25,6 +26,7 @@ const allowedOrigins = [
 
 const corsOptions = {
   origin: function (origin, callback) {
+    // Permite peticiones sin origen (como Postman) o si el origen está en la lista blanca
     if (!origin || allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
@@ -36,7 +38,7 @@ const corsOptions = {
   allowedHeaders: ['Content-Type', 'Authorization'] // ¡CORRECCIÓN! Permitir cabeceras necesarias
 };
 
-// Habilitar la respuesta a las peticiones pre-flight (de permiso)
+// Habilitar la respuesta a las peticiones pre-flight (de permiso) para todas las rutas
 app.options('*', cors(corsOptions)); 
 
 // Usar la configuración de CORS para todas las demás rutas
