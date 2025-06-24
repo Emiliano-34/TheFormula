@@ -17,8 +17,7 @@ export const getFeaturedProducts = async (req, res) => {
       FROM PRODUCTOS P
       LEFT JOIN (
         SELECT * FROM OFERTAS
-        WHERE FECHA_INICIO <= CAST(GETDATE() AS DATE)
-          AND FECHA_FIN >= CAST(GETDATE() AS DATE)
+        WHERE FECHA_INICIO <= GETDATE() AND FECHA_FIN >= GETDATE()
       ) O ON P.ID_PRODUCTO = O.ID_PRODUCTO
       LEFT JOIN (
         SELECT ID_PRODUCTO, COUNT(*) AS review_count
@@ -39,6 +38,7 @@ export const getFeaturedProducts = async (req, res) => {
 export const getCategories = async (req, res) => {
   try {
     const pool = await poolPromise;
+    // CORRECCIÓN DEFINITIVA: Usando el nombre de tabla correcto 'CATEGORIA'
     const result = await pool.request().query(`
       SELECT ID_CATEGORIA AS id, NOMBRE_CATEGORIA AS name
       FROM CATEGORIA
@@ -92,6 +92,7 @@ export const getProductById = async (req, res) => {
   }
 };
 
+// ... (El resto de las funciones se mantienen igual)
 export const getProductosRelacionados = async (req, res) => {
   try {
     const { categoriaId, productoId } = req.params;
@@ -117,8 +118,7 @@ export const getProductosRelacionados = async (req, res) => {
         FROM PRODUCTOS P
         LEFT JOIN (
           SELECT * FROM OFERTAS
-          WHERE FECHA_INICIO <= CAST(GETDATE() AS DATE)
-            AND FECHA_FIN >= CAST(GETDATE() AS DATE)
+          WHERE FECHA_INICIO <= GETDATE() AND FECHA_FIN >= GETDATE()
         ) O ON P.ID_PRODUCTO = O.ID_PRODUCTO
         WHERE
           P.ID_CATEGORIA = @categoriaId
@@ -156,6 +156,7 @@ export const getAllProducts = async (req, res) => {
   }
 };
 
+
 export const getOfertasActivas = async (req, res) => {
   try {
     const pool = await poolPromise;
@@ -172,8 +173,8 @@ export const getOfertasActivas = async (req, res) => {
       FROM OFERTAS O
       JOIN PRODUCTOS P ON P.ID_PRODUCTO = O.ID_PRODUCTO
       WHERE
-        O.FECHA_INICIO <= CAST(GETDATE() AS DATE)
-        AND O.FECHA_FIN >= CAST(GETDATE() AS DATE)
+        O.FECHA_INICIO <= GETDATE()
+        AND O.FECHA_FIN >= GETDATE()
         AND P.EXISTENCIAS > 0
     `);
 
@@ -212,8 +213,8 @@ export const searchProducts = async (req, res) => {
         FROM PRODUCTOS P
         LEFT JOIN OFERTAS O
           ON O.ID_PRODUCTO = P.ID_PRODUCTO
-          AND O.FECHA_INICIO <= CAST(GETDATE() AS DATE)
-          AND O.FECHA_FIN >= CAST(GETDATE() AS DATE)
+          AND O.FECHA_INICIO <= GETDATE()
+          AND O.FECHA_FIN >= GETDATE()
         WHERE P.NOMBRE_PRODUCTO LIKE @q
       `);
 
