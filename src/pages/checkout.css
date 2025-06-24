@@ -1,0 +1,167 @@
+/* src/pages/Checkout.css */
+
+.checkout-page {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 2rem;
+  font-family: 'Roboto', sans-serif;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+}
+
+.checkout-title {
+  font-size: 26px;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 1.5rem;
+}
+
+.checkout-grid {
+  display: flex;
+  gap: 2rem;
+  justify-content: space-between;
+}
+
+.left-column {
+  flex: 2;
+}
+
+.right-column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.checkout-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.checkout-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 1rem;
+}
+
+.item-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.item-info img {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+  background-color: #f5f5f5;
+  border-radius: 6px;
+}
+
+.item-total {
+  font-weight: 500;
+  color: #444;
+}
+
+.summary-box {
+  background-color: #f8f8f8;
+  padding: 1rem;
+  margin-top: 2rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 15px;
+  color: #333;
+}
+
+.summary-box .total {
+  font-size: 17px;
+  font-weight: 600;
+  margin-top: 0.5rem;
+}
+
+.delivery-box {
+  background-color: #f2f2f2;
+  padding: 1rem;
+  margin-top: 1rem;
+  border-left: 4px solid #e53935;
+  font-size: 14px;
+  color: #333;
+  border-radius: 6px;
+}
+
+.buy-again-btn {
+  margin-top: 1.5rem;
+  background-color: #e53935;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  font-size: 15px;
+  font-weight: 500;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 100%;
+}
+
+.buy-again-btn:hover {
+  background-color: #c62828;
+}
+
+.payment-details {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 1.5rem;
+}
+
+.payment-details h4 {
+  margin-bottom: 1rem;
+  font-size: 16px;
+  color: #2c3e50;
+}
+
+.no-payment {
+  color: #888;
+  font-size: 14px;
+  margin-bottom: 0.5rem;
+}
+
+.select-method-btn {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  font-size: 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.select-method-btn:hover {
+  background-color: #2980b9;
+}
+
+.help-box h4 {
+  font-size: 16px;
+  color: #2c3e50;
+  margin-bottom: 1rem;
+}
+
+.help-btn {
+  background-color: transparent;
+  color: #2c3e50;
+  border: 1px solid #ccc;
+  padding: 0.5rem 1rem;
+  font-size: 14px;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+  width: 100%;
+}
+
+.help-btn:hover {
+  background-color: #f4f4f4;
+}

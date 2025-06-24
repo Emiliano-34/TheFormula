@@ -1,0 +1,140 @@
+/* src/components/Productos.css */
+
+.products-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  background-color: #fff;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.05);
+}
+
+.products-table thead {
+  background-color: #2c3e50;
+  color: white;
+}
+
+.products-table th,
+.products-table td {
+  padding: 12px 10px;
+  text-align: left;
+  border-bottom: 1px solid #eaeaea;
+}
+
+.products-table th {
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.products-table td {
+  color: #333;
+  vertical-align: middle;
+}
+
+.products-table tr:hover {
+  background-color: #f9f9f9;
+}
+
+.products-table img {
+  height: 40px;
+  width: auto;
+  border-radius: 4px;
+  object-fit: contain;
+  background-color: #f5f5f5;
+  padding: 4px;
+}
+
+/* Opcional: para botones en cada fila (editar/eliminar) */
+.table-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.table-actions button {
+  padding: 5px 10px;
+  border: none;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.table-actions .edit-btn {
+  background-color: #3498db;
+  color: white;
+}
+
+.table-actions .edit-btn:hover {
+  background-color: #2980b9;
+}
+
+.table-actions .delete-btn {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.table-actions .delete-btn:hover {
+  background-color: #c0392b;
+}
+
+.price-container {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.original-price {
+  text-decoration: line-through;
+  color: #999;
+  font-size: 14px;
+}
+
+.current-price {
+  color: #e74c3c;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+/* NUEVOS ESTILOS PARA FILTRO DE CATEGORÍA */
+.filtro-categoria {
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  color: #333;
+}
+
+.filtro-categoria label {
+  margin-right: 10px;
+  font-weight: 600;
+}
+
+.filtro-categoria select {
+  padding: 6px 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  cursor: pointer;
+  background-color: white;
+  transition: border-color 0.2s;
+}
+
+.filtro-categoria select:hover,
+.filtro-categoria select:focus {
+  border-color: #d63d3d;
+  outline: none;
+}
+/* Opcional: agrega un pequeño efecto hover en inputs y selects */
+
+select, input[type="text"] {
+  transition: border-color 0.3s ease;
+}
+
+select:hover, input[type="text"]:hover,
+select:focus, input[type="text"]:focus {
+  border-color: #d63d3d;
+  outline: none;
+}

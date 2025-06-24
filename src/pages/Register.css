@@ -1,0 +1,152 @@
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    background: #f5f5f5;
+  }
+  
+  .top-banner {
+    background: #000;
+    color: white;
+    text-align: center;
+    padding: 8px;
+    font-size: 14px;
+  }
+  
+  .top-banner a {
+    color: white;
+    font-weight: bold;
+    margin-left: 10px;
+    text-decoration: underline;
+  }
+  
+  .main-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: white;
+    padding: 16px 32px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .logo {
+    font-weight: bold;
+    font-size: 20px;
+  }
+  
+  .main-nav a {
+    margin: 0 10px;
+    color: black;
+    text-decoration: none;
+  }
+  
+  .search-box {
+    display: flex;
+    align-items: center;
+  }
+  
+  .search-box input {
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px 0 0 4px;
+  }
+  
+  .search-box button {
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    border-left: none;
+    background: #eee;
+    border-radius: 0 4px 4px 0;
+    cursor: pointer;
+  }
+  
+  .register-container {
+    display: flex;
+    justify-content: center;
+    padding: 40px 20px;
+  }
+  
+  .register-card {
+    background: white;
+    padding: 32px;
+    width: 100%;
+    max-width: 600px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.05);
+  }
+  
+  .register-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+  }
+  
+  .register-header h2 {
+    color: #d0342c;
+    margin: 0;
+  }
+  
+  .login-link {
+    font-size: 14px;
+    color: #000;
+    text-decoration: none;
+  }
+  
+  .form-row {
+    display: flex;
+    gap: 16px;
+  }
+  
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 16px;
+    flex: 1;
+  }
+  
+  .form-group label {
+    margin-bottom: 4px;
+    font-weight: bold;
+    font-size: 14px;
+  }
+  
+  .form-group input {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+  
+  .form-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 16px;
+    margin-top: 20px;
+  }
+  
+  .cancel {
+    background: transparent;
+    border: none;
+    color: #000;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  
+  .actual {
+    color: #d0342c;
+  }
+
+  .main-nav .actual {
+    color: #d0342c;
+    font-weight: bold;
+  }
+  
+
+  .create {
+    background: #d0342c;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+  }
