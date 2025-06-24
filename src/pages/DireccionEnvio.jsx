@@ -5,7 +5,6 @@ import SidebarCuenta from '../components/SidebarCuenta';
 import API_URL from '../apiConfig'; // <-- IMPORTANTE: Usando la URL centralizada
 import './DireccionEnvio.css'; // Usaremos su propio CSS
 
-// Puedes obtener esta lista desde el backend en el futuro
 const estadosDeMexico = [
     'Aguascalientes', 'Baja California', 'Baja California Sur', 'Campeche', 'Chiapas',
     'Chihuahua', 'Ciudad de México', 'Coahuila', 'Colima', 'Durango',
@@ -29,22 +28,37 @@ const DireccionEnvio = () => {
         referencias: ''
     });
     const [mensaje, setMensaje] = useState({ texto: '', tipo: '' });
+    const [cargando, setCargando] = useState(true);
 
     useEffect(() => {
         const fetchDireccion = async () => {
-            if (!user?.id) return;
+            if (!user?.id) {
+                setCargando(false);
+                return;
+            };
             try {
                 // CORRECCIÓN: Apuntando a la URL de producción
                 const res = await fetch(`${API_URL}/api/users/${user.id}/direccion`);
                 const data = await res.json();
                 if (data.success && data.direccion) {
-                    // Aseguramos que todos los campos tengan un valor
-                    const dirCompleta = { ...direccion, ...data.direccion };
+                    const dirCompleta = {
+                        calle: data.direccion.calle || '',
+                        numero_exterior: data.direccion.numero_exterior || '',
+                        numero_interior: data.direccion.numero_interior || '',
+                        colonia: data.direccion.colonia || '',
+                        codigo_postal: data.direccion.codigo_postal || '',
+                        ciudad: data.direccion.ciudad || '',
+                        estado: data.direccion.estado || '',
+                        pais: data.direccion.pais || 'México',
+                        referencias: data.direccion.referencias || ''
+                    };
                     setDireccion(dirCompleta);
                 }
             } catch (error) {
                 console.error('Error al obtener dirección:', error);
-                setMensaje({ texto: 'No se pudo cargar la dirección.', tipo: 'error' });
+                setMensaje({ texto: 'No se pudo cargar la dirección guardada.', tipo: 'error' });
+            } finally {
+                setCargando(false);
             }
         };
         fetchDireccion();
@@ -95,48 +109,50 @@ const DireccionEnvio = () => {
                         </div>
                     )}
 
-                    <form className="form-direccion" onSubmit={handleSubmit}>
-                        <div className="form-grupo">
-                            <label htmlFor="calle">Calle</label>
-                            <input id="calle" name="calle" placeholder="Av. Siempre Viva" value={direccion.calle} onChange={handleChange} required />
-                        </div>
-                        <div className="form-fila">
+                    {cargando ? <p>Cargando dirección...</p> : (
+                        <form className="form-direccion" onSubmit={handleSubmit}>
                             <div className="form-grupo">
-                                <label htmlFor="numero_exterior">Número Exterior</label>
-                                <input id="numero_exterior" name="numero_exterior" placeholder="742" value={direccion.numero_exterior} onChange={handleChange} required />
+                                <label htmlFor="calle">Calle</label>
+                                <input id="calle" name="calle" placeholder="Av. Siempre Viva" value={direccion.calle} onChange={handleChange} required />
+                            </div>
+                            <div className="form-fila">
+                                <div className="form-grupo">
+                                    <label htmlFor="numero_exterior">Número Exterior</label>
+                                    <input id="numero_exterior" name="numero_exterior" placeholder="742" value={direccion.numero_exterior} onChange={handleChange} required />
+                                </div>
+                                <div className="form-grupo">
+                                    <label htmlFor="numero_interior">Número Interior (Opcional)</label>
+                                    <input id="numero_interior" name="numero_interior" placeholder="Depto. 3" value={direccion.numero_interior} onChange={handleChange} />
+                                </div>
                             </div>
                             <div className="form-grupo">
-                                <label htmlFor="numero_interior">Número Interior (Opcional)</label>
-                                <input id="numero_interior" name="numero_interior" placeholder="Depto. 3" value={direccion.numero_interior} onChange={handleChange} />
+                                <label htmlFor="colonia">Colonia</label>
+                                <input id="colonia" name="colonia" placeholder="Springfield" value={direccion.colonia} onChange={handleChange} required />
                             </div>
-                        </div>
-                        <div className="form-grupo">
-                            <label htmlFor="colonia">Colonia</label>
-                            <input id="colonia" name="colonia" placeholder="Springfield" value={direccion.colonia} onChange={handleChange} required />
-                        </div>
-                        <div className="form-fila">
+                            <div className="form-fila">
+                                <div className="form-grupo">
+                                    <label htmlFor="codigo_postal">Código Postal</label>
+                                    <input id="codigo_postal" name="codigo_postal" placeholder="12345" value={direccion.codigo_postal} onChange={handleChange} required />
+                                </div>
+                                <div className="form-grupo">
+                                    <label htmlFor="ciudad">Ciudad / Municipio</label>
+                                    <input id="ciudad" name="ciudad" placeholder="Cualquier lugar" value={direccion.ciudad} onChange={handleChange} required />
+                                </div>
+                            </div>
                             <div className="form-grupo">
-                                <label htmlFor="codigo_postal">Código Postal</label>
-                                <input id="codigo_postal" name="codigo_postal" placeholder="12345" value={direccion.codigo_postal} onChange={handleChange} required />
+                                <label htmlFor="estado">Estado</label>
+                                <select id="estado" name="estado" value={direccion.estado} onChange={handleChange} required>
+                                    <option value="">Selecciona un estado</option>
+                                    {estadosDeMexico.map(e => <option key={e} value={e}>{e}</option>)}
+                                </select>
                             </div>
                             <div className="form-grupo">
-                                <label htmlFor="ciudad">Ciudad / Municipio</label>
-                                <input id="ciudad" name="ciudad" placeholder="Cualquier lugar" value={direccion.ciudad} onChange={handleChange} required />
+                                <label htmlFor="referencias">Referencias Adicionales</label>
+                                <textarea id="referencias" name="referencias" placeholder="Ej: Entre calle A y calle B, casa color verde." value={direccion.referencias} onChange={handleChange}></textarea>
                             </div>
-                        </div>
-                        <div className="form-grupo">
-                            <label htmlFor="estado">Estado</label>
-                            <select id="estado" name="estado" value={direccion.estado} onChange={handleChange} required>
-                                <option value="">Selecciona un estado</option>
-                                {estadosDeMexico.map(e => <option key={e} value={e}>{e}</option>)}
-                            </select>
-                        </div>
-                        <div className="form-grupo">
-                            <label htmlFor="referencias">Referencias Adicionales</label>
-                            <textarea id="referencias" name="referencias" placeholder="Ej: Entre calle A y calle B, casa color verde." value={direccion.referencias} onChange={handleChange}></textarea>
-                        </div>
-                        <button type="submit" className="btn-guardar">Guardar Dirección</button>
-                    </form>
+                            <button type="submit" className="btn-guardar">Guardar Dirección</button>
+                        </form>
+                    )}
                 </main>
             </div>
         </>
