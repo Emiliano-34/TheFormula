@@ -12,21 +12,24 @@ const DetallesProducto = () => {
   const [cantidad, setCantidad] = useState(1);
   const { addToCart } = useCart();
   const [resenas, setResenas] = useState([]);
-  const [nuevaResena, setNuevaResena] = useState({ texto: '', calificacion: 5.0 });
-  const [comentario, setComentario] = useState('');
-  const [calificacion, setCalificacion] = useState(0);
-  
+  const [nuevaResena, setNuevaResena] = useState({ texto: '', calificacion: 0 });
+
   const enviarResena = async () => {
   try {
+    console.log("Enviando reseña:", {
+    texto: nuevaResena.texto,
+    calificacion: nuevaResena.calificacion,
+    });
+
     const response = await fetch(`http://localhost:3001/api/resenas/${id}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        comentario,
-        calificacion: parseInt(calificacion),
-      }),
+      texto: nuevaResena.texto,
+      calificacion: nuevaResena.calificacion,
+    }),
     });
 
     if (!response.ok) {
@@ -35,12 +38,16 @@ const DetallesProducto = () => {
 
     const data = await response.json();
     console.log("Reseña enviada con éxito", data);
-    // limpiar formulario aquí si quieres
+
+    // Opcional: agregar la nueva reseña a la lista
+    setResenas([...resenas, { texto: nuevaResena.texto, calificacion: nuevaResena.calificacion }]);
+
+    // Limpiar el formulario
+    setNuevaResena({ texto: '', calificacion: 0 });
   } catch (error) {
     console.error("Error al enviar reseña:", error);
   }
-};
-
+  };
 
  useEffect(() => {
   const fetchProducto = async () => {
@@ -143,6 +150,7 @@ fetchResenas();
           </div>
         </div>
       </div>
+
       <div className="resenas-container">
   <h2>Reseñas</h2>
 
@@ -165,19 +173,21 @@ fetchResenas();
       placeholder="Escribe tu comentario aquí"
     />
     <select
-        value={calificacion}
-        onChange={(e) => setCalificacion(e.target.value)}
-      >
-        <option value={0}>Calificación</option>
-        <option value={1}>1</option>
-        <option value={2}>2</option>
-        <option value={3}>3</option>
-        <option value={4}>4</option>
-        <option value={5}>5</option>
-      </select>
+      value={nuevaResena.calificacion}
+      onChange={(e) =>
+        setNuevaResena({ ...nuevaResena, calificacion: parseInt(e.target.value) })
+      }
+    >
+      <option value={0}>Calificación</option>
+      <option value={1}>1</option>
+      <option value={2}>2</option>
+      <option value={3}>3</option>
+      <option value={4}>4</option>
+      <option value={5}>5</option>
+    </select>
     <button onClick={enviarResena}>Enviar reseña</button>
-  </div>
-</div>
+    </div>
+    </div>
 
 
       {relacionados.length > 0 && (
