@@ -1,0 +1,110 @@
+/* Contenedor principal para el layout de la cuenta */
+.layout-cuenta {
+  display: flex;
+  max-width: 1200px;
+  margin: 2rem auto;
+  gap: 2rem;
+  padding: 0 1rem;
+}
+
+/* Estilos para el contenido principal de la página de la cuenta */
+.contenido-cuenta {
+  flex-grow: 1;
+  background-color: #ffffff;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.contenido-cuenta h2 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  color: #333;
+}
+
+.contenido-cuenta p {
+  margin-bottom: 2rem;
+  color: #666;
+}
+
+/* Lista de pedidos */
+.pedidos-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Tarjeta individual para cada pedido */
+.pedido-card {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  transition: box-shadow 0.3s ease;
+}
+
+.pedido-card:hover {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.pedido-header {
+  display: flex;
+  justify-content: space-between;
+  background-color: #f9f9f9;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #e0e0e0;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.pedido-header > div {
+    display: flex;
+    flex-direction: column;
+}
+
+.pedido-label {
+  font-weight: bold;
+  font-size: 0.8rem;
+  color: #888;
+  margin-bottom: 0.25rem;
+}
+
+.pedido-body {
+  padding: 1.5rem;
+}
+
+.pedido-estado {
+  font-weight: bold;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  display: inline-block;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+
+/* Colores de estado */
+.estado-pendiente {
+  background-color: #fffbe6;
+  color: #fadb14;
+}
+.estado-enviado {
+  background-color: #e6f7ff;
+  color: #1890ff;
+}
+.estado-entregado {
+  background-color: #f6ffed;
+  color: #52c41a;
+}
+.estado-cancelado {
+  background-color: #fff1f0;
+  color: #ff4d4f;
+}
+
+/* Mensajes de error o carga */
+.mensaje.error {
+    color: #d8000c;
+    background-color: #ffbaba;
+    padding: 1rem;
+    border-radius: 5px;
+    margin-bottom: 1rem;
+}
