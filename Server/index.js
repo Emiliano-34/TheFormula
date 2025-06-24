@@ -1,6 +1,5 @@
 import express from 'express';
 import cors from 'cors';
-
 import cartRoutes from './routes/cartRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import productRoutes from './routes/productRoutes.js';
@@ -16,32 +15,30 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const app = express();
-// Render te asignará un puerto, así que usamos process.env.PORT
 const PORT = process.env.PORT || 3001;
 
-// --- INICIO DE LA CORRECCIÓN DE CORS ---
-
-// Lista de orígenes permitidos (invitados a la fiesta)
+// --- INICIO DE LA CORRECCIÓN DE CORS DEFINITIVA ---
 const allowedOrigins = [
-  'http://localhost:5173',          // Tu entorno de desarrollo local
-  'https://emiliano-34.github.io'   // Tu página en producción
+  'http://localhost:5173',
+  'https://emiliano-34.github.io'
 ];
 
 const corsOptions = {
   origin: function (origin, callback) {
-    // Permite peticiones sin origen (como Postman o apps móviles) o si el origen está en la lista blanca
+    // Permite peticiones sin origen (como Postman) o si el origen está en la lista blanca
     if (!origin || allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
       callback(new Error('No permitido por CORS'));
     }
   },
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  credentials: true
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // ¡CORRECCIÓN! Permitir el método OPTIONS
+  credentials: true,
+  allowedHeaders: ['Content-Type', 'Authorization'] // ¡CORRECCIÓN! Permitir cabeceras comunes
 };
 
+// Usar la configuración de CORS para todas las rutas
 app.use(cors(corsOptions));
-
 // --- FIN DE LA CORRECCIÓN DE CORS ---
 
 app.use(express.json());
@@ -64,6 +61,5 @@ app.get('/', (req, res) => {
 });
 
 app.listen(PORT, () => {
-  // Usamos 0.0.0.0 para asegurarnos de que escuche en la red de Render
   console.log(`Servidor backend escuchando en el puerto ${PORT}`);
 });

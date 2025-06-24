@@ -10,7 +10,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (correo, contrasena) => {
     try {
-      // Usamos la URL correcta del backend de Render
+      // CORRECCIÓN: Usamos la URL correcta del backend de Render
       const response = await fetch(`${API_URL}/api/users/login`, {
         method: 'POST',
         headers: { 
@@ -47,7 +47,7 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (form) => {
     try {
-      // Usamos la URL correcta del backend de Render
+      // CORRECCIÓN: Usamos la URL correcta del backend de Render
       const response = await fetch(`${API_URL}/api/users/register`, {
         method: 'POST',
         headers: {
@@ -91,24 +91,10 @@ export const AuthProvider = ({ children }) => {
     if (storedUser) {
       try {
         const parsed = JSON.parse(storedUser);
-
-        const normalizedUser = {
-          id: parsed.id,
-          nombre: parsed.nombre ?? parsed.NOMBRE ?? '',
-          apellido: parsed.apellido ?? parsed.APELLIDO ?? '',
-          correo: parsed.correo ?? parsed.CORREO ?? '',
-          telefono: parsed.telefono ?? parsed.TELEFONO ?? '',
-          rol:
-            parsed.rol?.toLowerCase?.() ??
-            parsed.ROL?.toLowerCase?.() ??
-            (parsed.admin === 1 || parsed.admin === true || parsed.admin === '1' ||
-             parsed.ADMIN === 1 || parsed.ADMIN === true || parsed.ADMIN === '1'
-              ? 'admin'
-              : 'user')
-        };
-        setUser(normalizedUser);
+        setUser(parsed);
       } catch (err) {
         console.error('❌ Error al parsear usuario almacenado:', err);
+        localStorage.removeItem('user');
       }
     }
   }, []);
